@@ -36,7 +36,7 @@ def average_valid_measurements(values):
     valid_count = 0
 
     for v in values:
-        if v is not None:
+        if v is not None and (not (isinstance(v, bool))):
             try:
                 num = float(v)
                 

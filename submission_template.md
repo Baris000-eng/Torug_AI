@@ -42,7 +42,7 @@ the count is equal to 0 and then if so, proceed accordingly (e.g. return 0.0). W
 
 - Irrespective of how many orders are cancelled, we are currently dividing the total order amount by the length (len(orders)) of the orders data structure (e.g. a list). This means that the count of the cancelled orders are still included in the divisor, even though they are excluded from the total order value. So, this will skew and give the wrong average order value at the end. In order to handle this problem, before the iteration over the orders starts (before the for loop), we should initialize the count with zero. Then, if the order status is not cancelled, we need to increment the count by one. At the end, we have found the number of non-cancelled orders. 
 
-- In the current version, there is no docstring which gives a hint about the type of the orders parameter, and what type of values it includes. This will make the function harder to understand and/or maintain within a team. 
+- In the current version, there is no docstring. So, we cannot get a hint about the functional requirements, the type of the orders parameter, and what type of values it includes. what type of values it includes, or the requirements of the function. This will make the function harder to understand and/or maintain within a team. 
 
 - There is no validation applied on the 'orders' data which is given as the parameter. This parameter should be a list/tuple/set of dictionaries. 
 
@@ -68,6 +68,8 @@ float() function within a try-except block. This will ensure that the amount is 
 - More robust order data handling is added: Each order in orders is safely typecasted/converted into a dictionary (dict()) within a try-except block. Each order that is not a dictionary type  (e.g. an integer) is handled and skipped. 
 
 - Error tolerance is added: Risky operations like typecasting (e.g. float() and dict()) are wrapped with try-except blocks so that the bad data does not crash the function. 
+
+- Docstring is added: A docstring is added to the calculate_average_order_value() function in order to have some hints about the types of the parameters and return values, and get some functional information. This will improve the code readability, maintainability, and extensibility. 
 
 
 ### Corrected code
@@ -181,10 +183,10 @@ The current implementation relies on a single @ check, which introduces several 
 
 ## 2) Proposed Fixes / Improvements
 ### Summary of changes
-- I replaced the simple 'if "@" in email' check with a robust regex-based (EMAIL_REGEX) check to ensure the email follows a 
+- The simple 'if "@" in email' check is replaced with a robust regex-based (EMAIL_REGEX) check to ensure the email follows a 
 proper structure (user, domain, and top-level domain) with appropriate type and amount of characters in each part. 
 
-The email regex that I have added: 
+The email regex that is added: 
 
 EMAIL_REGEX = re.compile(r"^[a-z0-9](?!.*\.{2})[a-z0-9.]{3,33}[a-z0-9]@[a-zA-Z0-9.-]{2,30}+\.[a-zA-Z]{2,20}$")
 
@@ -204,14 +206,16 @@ length to be between 3 and 33 characters.
 that is at least 2 charachters and at most 30 charachters long, and ends with a top-level domain (like 'com' or 'org'), that is at least 2 characters and 
 at most 20 charachters long.
 
-- I added checks to ensure the input is actually a list, tuple, or set, and I handle empty/None inputs properly with 'if not emails'.
+- Some checks are added to ensure the input is actually a list, tuple, or set, and I handle empty/None inputs properly with 'if not emails'.
 
-- I created a dedicated helper function is_valid_email() with the email parameter to make the code cleaner, more readable, 
+- A dedicated helper function is_valid_email() is created with the email parameter to make the code cleaner, more readable, 
 easier to test, and easier to change. In this helper function, I added the 'isinstance(email, str)' check to ensure the code does not crash if 
 a non-string object is passed in the list. I have used a full match check with the provided email regex, 'bool(EMAIL_REGEX.fullmatch(email))', to 
 ensure that the provided email is fully matching with the email format given in the email regex, and no extra text is allowed before or 
 after the valid structure . This guarantees that a string like "user@example.comextratexthere" is correctly identified as invalid.
 Moreover, I have called this function for each email in emails. If the email is valid, I have incremented the valid email counter by one. 
+
+- Docstrings are added to the count_valid_emails() and is_valid_email() function to improve the code readability, maintainability, and extensibility. 
 
 
 ### Corrected code
@@ -325,7 +329,7 @@ would still treat it as valid because it matches the provided regular expression
 - The values parameter is not an iterable: We need to ensure that the values input is an iterable, and it is a list-, tuple-, set-, or range-type of input. 
 
 ### Code quality / design issues
-- The 'count' includes None values: The count is set to len(values) before filtering out None. However, the loop skips None, so the average is incorrect if some values are None. It should count only valid measurements. 
+- The 'count' includes None values: The count is set to len() before filtering out None. However, the loop skips None, so the average is incorrect if some values are None. It should count only valid measurements. 
 
 - Type conversion inside the loop: The float(v) conversion is used without handling potential exceptions. If v is not None but not convertible to float, it will crash.
 
@@ -350,6 +354,7 @@ total and count are okay, but could use valid_total and valid_count to make it c
 
 - Mathematical Filtering: Non-finite numbers (such as NaN or Infinity) are excluded via math.isfinite() to ensure the average remains a meaningful real number.
 
+- Docstring is added: Docstring is added to the average_valid_measurements() function to achieve better code readability, maintainability, and extensibility. 
 
 ### Corrected code
 See `correct_task3.py`
@@ -360,7 +365,7 @@ See `correct_task3.py`
 If you were to test this function, what areas or scenarios would you focus on, and why?
 
 - Input Type Integrity (The "Iterable" Check)
-Since the new implementation strictly validates the input type, we need to ensure it doesn't crash when it receives something it doesn't expect.
+Since the new implementation strictly validates the input type, we need to ensure it does not crash when it receives something it does not expect.
 
 Scenario: Pass an integer, a string, or None instead of a list. We need to test this scenario to verify that the isinstance check is executed 
 correctly and returns 0.0 instead of raising an AttributeError.
@@ -368,18 +373,18 @@ correctly and returns 0.0 instead of raising an AttributeError.
 - Malformed String Handling
 In real-world data (like csv exports), numbers often arrive as strings.
 
-Scenario: A list containing valid numeric strings ("17.8"), malformed strings ("12a.6"), and empty strings (""). We need to test this scenario 
+Scenario: A list containing valid numeric strings ("17.8"), empty strings (""), and malformed strings ("12abc.6"). We need to test this scenario 
 to ensure that the try-except block is utilized to skip the "garbage" while still extracting the valid data.
 
 - Incompatible Types and Constants
 Data feeds often contain placeholders for missing data.
 
-Scenario: A list containing None, True/False, or nested lists. We need to test this scenario to confirm that None is filtered out and that other incompatible types do not accidentally get converted to 1.0 or 0.0 (which Python sometimes does with Booleans).
+Scenario: A list containing None, True/False, or nested lists. We need to test this scenario to confirm that None is filtered out. Moreover, we need to ensure that other incompatible types are not accidentally converted to 1.0 or 0.0 (using float(v)), which Python does for the true or false values.  
 
 - Mathematical Edge Cases (Inf and NaN)
 Standard math operations fail or become disrupted when they encounter non-finite numbers.
 
-Scenario: For example, the following list: [10, float('inf'), float('nan'), 30, 40]. We need to test this scenario to verify that math.isfinite() is successfully applied. The result should be 15.0 (the average of 10 and 20), proving that the "poisonous" values were excluded.
+Scenario: For example, the following list: [10, float('inf'), float('nan'), 30, 50]. We need to test this scenario to verify that math.isfinite() is successfully applied. The result should be 30.0 (the average of 10, 30, and 50), proving that the disruptive ("poisonous") values were excluded.
 
 ## 3) Explanation Review & Rewrite
 ### AI-generated explanation (original)
