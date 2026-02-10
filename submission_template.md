@@ -2,7 +2,7 @@
 
 ## Candidate
 - Name: Barış Kaplan 
-- Approximate time spent: 100 minutes (1 hour 40 minutes)
+- Approximate time spent: 120 minutes (2 hours)
 
 ---
 
@@ -20,13 +20,14 @@
 
 
 ### Edge cases & risks
+- For the empty input parameter of orders (such as list(), [], and tuple()), the count will be zero. Therefore, while calculating the average order value (total / count), the current version of the code will throw a divide-by-zero error. 
+
 - Orders data structure can be empty or None, or it can be a data type other than the list, tuple, or set. These cases are not handled in the current version of the code. 
 
 - Order amounts with infinite values are included in the current version, which will skew the average order value calculation. 
 
 - Order status check is done in a case-sensitive manner. One can type the order status value as "CANcelled". It will also mean that the order is cancelled and we need to do this check in a case-insensitive manner. If not, then we will skip such values of the order statuses, which will lead to a wrong average order value.
 
-- For the empty input parameter of orders (such as list(), [], and tuple()), the count will be zero. Therefore, the current version of the code will throw divide-by-zero (ZeroDivision) error. We need to handle this in the code. 
 
 
 - Order amounts can be accidentally given as NaN (Not-a-Number) values, which will directly make the average order value NaN. We should also avoid this scenario. 
@@ -55,7 +56,7 @@ the count is equal to 0 and then if so, proceed accordingly (e.g. return 0.0). W
 ## 2) Proposed Fixes / Improvements
 ### Summary of changes
 - Division-by-zero bug is fixed: 'count = len(orders)' is replaced with 'valid_count', and 
-the valid_count is incremented only if the order is non-cancelled. An if statement checking whether the valid_count is 0 is added after the for loop. If so, we return 0.0 as the average. Through this if check, we can handle empty order parameter input (e.g. [] or list()) without any errors. 
+the valid_count is incremented only if the order is non-cancelled. An if statement checking whether the valid_count is 0 is added after the for loop. If so, we return 0.0 as the average. Through this if check, we can handle empty orders parameter (e.g. [] or list()) without any errors. 
 
 - Input parameter validation is added: It checks if order is not a list/tuple/set, or is empty, and return 0.0 as the average order value if so. 
 
@@ -68,7 +69,7 @@ float() function within a try-except block. This will ensure that the amount is 
 
 - More robust order data handling is added: Each order in orders is safely typecasted/converted into a dictionary (dict()) within a try-except block. Each order that is not a dictionary type  (e.g. an integer) is handled and skipped. 
 
-- Error tolerance is added: Risky operations such as typecasting (e.g. float() and dict()) are wrapped with try-except blocks so that the bad data does not crash the function. 
+- Error tolerance is added: Risky operations like typecasting (e.g. float() and dict()) are wrapped with try-except blocks so that the bad data does not crash the function. 
 
 
 ### Corrected code
@@ -78,6 +79,11 @@ See `correct_task1.py`
 
  ### Testing Considerations
 If you were to test this function, what areas or scenarios would you focus on, and why?
+
+1. True-structured orders parameter with true-structured dictionaries where correct keys and correct type of values are located in each dictionary: 
+
+I will initially test the case where the orders parameter, each order in orders, and the keys and values in each order are correctly structured and typed. Because,
+our function should work seamlessly where the parameter is fully as expected.
 
 1. Empty or invalid input parameters : Because, the function explicitly checks for non-iterable or empty inputs. 
 
@@ -142,7 +148,7 @@ Unknowns may include extremely large datasets or very large and finite values of
 
 ## 1) Code Review Findings
 ### Critical bugs
-- Extremely Inadequate and Loose Email Validation: This code defines a valid email as any string that contains the @ symbol, regardless of its position. After the last '@' symbol, a valid email must have a top-level domain like '.com', and a domain like 'gmail'. This code does not find the last '@' symbol in the email, and it does not check for the presence of any characters following the '@' symbol, including a dot ('.'), a domain like '.gmail', and a top-level domain like '.com'. This will lead to significant amount of "false positives". For instance, using this logic, the following emails would be counted as valid emails: 
+- Extremely Inadequate and Loose Email Validation: This code defines a valid email as any string that contains the @ symbol, regardless of its position. After the last '@' symbol, a valid email must have a top-level domain like '.com', and a domain like 'gmail'. This code does not find the last '@' symbol in the email, and it does not check for the presence of any characters following the '@' symbol, including a domain like 'gmail', a dot ('.'), and a top-level domain like 'com'. This will lead to significant amount of "false positives". For instance, using this logic, the following emails would be counted as valid emails: 
 
 "I am @ at work"
 "cats@and@dogs"
@@ -154,24 +160,62 @@ Unknowns may include extremely large datasets or very large and finite values of
 ### Edge cases & risks
 The current implementation relies on a single @ check, which introduces several edge cases and risks:
 
-- Missing Domain and Top-Level Domain (TLD) Validation: The current implementation of the function does not find the last '@' symbol in the email. Moreover, it does not verify the presence of a dot (.), a domain like 'gmail', and a top-level domain like 'com', which follow the last '@' symbol found. This means that using the current implementation, the email strings such as 'hello@dad', "@@", "@  b@c", "@monkey", and "myuser@" would be erroneously counted as valid.
-
 - Type Safety Risk of Each Email in Emails: If the emails iterable (e.g. a list) contains non-string data types (e.g., [943, ["da@b.com"], None]), the line 'if "@" in email' will raise a TypeError, and crash the program.
 
-- Type Safety Risk of Emails Input Parameter: The current implementation of the function does not validate the 'emails' parameter. It should not be None or empty, and it should be an iterable such as list, tuple, and set. We should add these checks in order to properly handle incompatible/malformed 'emails' input parameter.
+- Type Safety Risk of 'Emails' Input Parameter: The current implementation of the function does not validate the 'emails' parameter. It should not be None or empty, and it should be an iterable such as list, tuple, and set. We should add these checks in order to properly handle incompatible/malformed 'emails' input parameter.
 
 
 ### Code quality / design issues
-- 1. Logic & Validation Issues
-    False Positives: The string "me@" or "@@@" or  would be counted as valid, altough they are not real email addresses.
+1. Logic & Validation Issues
 
-Missing Standards: The current code does not check for a top-level domain (like 'gmail'), a dot (.), a domain (like 'com'), and invalid charachters. 
+    - Missing Standards: The current code does not check the existence of a domain (like 'gmail'), a dot (.), and a top-level domain (like 'com'), following the last '@' symbol found in the email in sequence.
 
-Boundary Cases: An empty string or a list of integers would cause this to either return 0 or crash, depending on the input type.
+    - False Positives: The strings "@pear", "me@" and "@@@@"  would be counted as valid emails, although they are not real email addresses.
+
+    - Type Safety Checks on Each Email: Each email in emails should be a string. To ensure this, we need to add a type safety check in our current code for each email. 
+
+    - Missing Character Checks: The current code does not check whether invalid characters such as whitespace, special characters, and punctuation marks exist in the email. Moreover, it does not check whether alphanumerical characters exist in the email. These checks should be added to the current implementation to ensure that we have valid emails and that only they are counted.  
+
+    - Type Safety Risk of 'Emails' Input Parameter: The current implementation of the function does not validate the 'emails' parameter. It should be checked to ensure that it is not None and it is a non-empty iterable such as list, tuple, and set. These checks should be added in order to properly handle incompatible/malformed 'emails' input parameter. 
+    
+2. Code Maintainability Issue: 
+    - The email validity logic is currently handled directly inside the count_valid_emails() function, which makes the function harder to read, test, and maintain. The email validation logic should be extracted into a separate helper function (e.g., is_valid_email()), and then called within count_valid_emails(). This separation would improve readability, promote reusability, simplify testing, and make future changes to the validation rules easier to manage.
+
+
 
 ## 2) Proposed Fixes / Improvements
 ### Summary of changes
-- 
+- I replaced the simple 'if "@" in email' check with a robust regex-based (EMAIL_REGEX) check to ensure the email follows a 
+proper structure (user, domain, and top-level domain) with appropriate type and amount of characters in each part. 
+
+The email regex that I have added: 
+
+EMAIL_REGEX = re.compile(r"^[a-z0-9](?!.*\.{2})[a-z0-9.]{3,33}[a-z0-9]@[a-zA-Z0-9.-]{2,30}+\.[a-zA-Z]{2,20}$")
+
+What does this email regex check?: 
+
+* Starts with alphanumeric character: ^[a-z0-9] ensures the email begins with a letter or number, not a special character.
+
+* No consecutive dots: (?!.*\.{2}) is a negative lookahead that ensures I do not allow two or more dots 
+in a row (e.g., myuser123....name@example.com is invalid).
+
+* Username length and content: [a-z0-9.]{3,33} allows letters, numbers, and dots for the username, restricting the total 
+length to be between 3 and 33 characters.
+
+* Ends username with an alphanumeric character: [a-z0-9] ensures the username part does not end with a dot.
+
+* Domain structure: @[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$ ensures the email has a @symbol, followed by a domain name (alphanumeric, hyphens, dots), 
+and ends with a top-level domain (like .comor .org) that is at least 2 characters long.
+
+- I added checks to ensure the input is actually a list, tuple, or set, and I handle empty/None inputs properly with 'if not emails'.
+
+- I created a dedicated helper function is_valid_email() with the email parameter to make the code cleaner, more readable, 
+easier to test, and easier to change. In this helper function, I added the 'isinstance(email, str)' check to ensure the code does not crash if 
+a non-string object is passed in the list. I have used a full match check with the provided email regex, 'bool(EMAIL_REGEX.fullmatch(email))', to 
+ensure that the provided email is fully matching with the email format given in the email regex, and no extra text is allowed before or 
+after the valid structure . This guarantees that a string like "user@example.comextratexthere" is correctly identified as invalid.
+Moreover, I have called this function for each email in emails. If the email is valid, I have incremented the valid email counter by one. 
+
 
 ### Corrected code
 See `correct_task2.py`
@@ -180,22 +224,86 @@ See `correct_task2.py`
 
 
 ### Testing Considerations
+
 If you were to test this function, what areas or scenarios would you focus on, and why?
+
+I would focus on the following test areas/scenarios: 
+
+ Valid Email Formats: I would test standard, valid emails to ensure the regex pattern allows them.
+
+    * Examples: testuser@example.com , user.name+tag@sub.domain.co.uk.
+
+  Malformed Email Structure: I would test different email structures that violate the EMAIL_REGEX to ensure they are correctly ignored.
+
+    * Examples: Missing @, missing domain, missing top-level domain, an email with a username less than 5 or more than 35 charachters, 
+    an email with a username ending with dot, email with a username containing consecutive dots, email with a domain name containing 1 
+    charachter or more than 30 charachters, an email with a top-level domain containing 1 charachter or more than 20 charachter, an email 
+    containing alphanumerical charachters in its username but not in its domain name or extension, and so forth.
+
+
+ Username and Domain Constraints: I would verify the length restrictions and character constraints I set in the regex.
+
+    * Examples: Usernames that are too short/long, or domains with invalid characters.
+
+ Consecutive Dot Constraint: Specifically, I would test for double dots within the username to ensure the negative lookahead ( (?!.*\.{2})) functions correctly.
+
+    * Examples: user..name@example.com .
+
+ Extra Text/Whitespace ( fullmatchverification): I would test strings that contain a valid email pattern but have additional text or spaces around it to confirm fullmatch() rejects them.
+
+    * Examples: "user@example.comextra_text", " user@example.com".
+
+ Input Type Handling: I would test the function with incorrect data types for the emails argument to ensure it handles them without crashing.
+
+    * Examples: Passing a single string instead of a list, or passing None.
 
 ## 3) Explanation Review & Rewrite
 ### AI-generated explanation (original)
 > This function counts the number of valid email addresses in the input list. It safely ignores invalid entries and handles empty input correctly.
 
 ### Issues in original explanation
-- 
+- It is inaccurate : The explanation claims it counts "valid" email addresses, but the code only checks whether the character "@" exists in the string. However, this 
+does not consider the position of the '@' symbol within the email. The current code does not validate how many and what type of characters can be located in which part 
+of the email. Moreover, it does not validate if the email has a username, a domain like 'gmail', and a proper extension (Top-Level Domain (TLD)) like 'com'. 
+
+- It fails to describe the logic : It does not mention that the validation is limited strictly to a substring check, rather than a structural regex validation.
+
+- It is overly optimistic : It states the function "safely ignores invalid entries". However, if a user passes a string like "invalid-email" or "@", the code incorrectly 
+counts them as valid simply because they contain an '@' symbol.
+
+- No description about the data type of each email: It does not explicitly mention that each email within the emails needs to be a string for the validation logic to work correctly. 
 
 ### Rewritten explanation
-- 
+> This function accurately counts valid email addresses and handles empty emails input correctly by implementing strict validation rules based on a robust regular expression.
+
+> Input Validation: The function checks if the input parameter emails is a valid iterable structure (list, tuple, or set) and handles empty or non-iterable inputs by returning a count of 0 immediately.
+
+> Strict String Validation: A dedicated helper function is_valid_email is used with re.fullmatch to enforce the following rules defined in the EMAIL_REGEX:
+
+* Starts with alphanumeric: The username must begin with a letter or number.
+
+* No consecutive dots: The username cannot contain consecutive dots like '...'
+
+* Length and Character Constraints: The username must contain between 3 and 33 characters (letters, numbers, or dots) between the first 
+and last characters. Therefore, the total username length must be between 5 and 35 characters.
+
+* Ends with alphanumeric: The username must end with a letter or number, not a dot.
+
+* Domain Structure: After the username ends, an '@' symbol should come. Then, a valid @ symbol must be followed by a domain name and a top-level 
+domain (such as '.com', and '.org') that is at least 2 characters long.
+
+> Error Handling: The function (specifically is_valid_email(email)) verifies that each item is a string (isinstance(email, str)) before validation, 
+> ensuring non-string items within the input list are safely ignored and the function does not crash.
 
 ## 4) Final Judgment
-- Decision: Approve / Request Changes / Reject
-- Justification:
-- Confidence & unknowns:
+- Decision: Approve 
+
+- Justification: It was approved because it successfully transitioned from a simplistic substring check ('@' in email) to a robust, regex-based validation. 
+It correctly handles various input data types (lists, tuples, sets), ensures only strings are processed to prevent runtime errors, and enforces strict structural 
+rules for email addresses. Moreover, the updated implementation correctly handles the empty input, and safely ignores 
+the invalid entries (such as non-iterable emails, None emails, and non-string email in the emails list). 
+
+- Confidence & unknowns: There is a high confidence. There are no notable unknowns regarding the code logic or the requirements of the explanation.
 
 ---
 

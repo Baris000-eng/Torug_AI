@@ -10,7 +10,7 @@ def average_valid_measurements(values):
     total = 0.0
     valid_count = 0
 
-    for v in values:
+    for v in list(values):
         if v is not None:
             try:
                 num = float(v)
