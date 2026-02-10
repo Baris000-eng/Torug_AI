@@ -21,7 +21,7 @@ def average_valid_measurements(values):
                 else:
                     continue
                     
-            except (ValueError, TypeError):
+            except:
                 continue
         
     # To avoid division by zero, return 0.0 if there are no valid measurements.

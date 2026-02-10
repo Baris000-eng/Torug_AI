@@ -154,7 +154,7 @@ Unknowns may include extremely large datasets or very large and finite values of
 ### Edge cases & risks
 The current implementation relies on a single @ check, which introduces several edge cases and risks:
 
-- Missing Domain and Top-Level Domain (TLD) Validation: The current implementation of the function does not find the last '@' symbol in the email. Moreover, it does not verify the presence of a dot (.), a domain like 'gmail', and a top-level domain like '.com', which follow the last '@' symbol found. This means that using the current implementation, the email strings such as 'hello@dad', "@@", "@  b@c", "@monkey", and "myuser@" would be erroneously counted as valid.
+- Missing Domain and Top-Level Domain (TLD) Validation: The current implementation of the function does not find the last '@' symbol in the email. Moreover, it does not verify the presence of a dot (.), a domain like 'gmail', and a top-level domain like 'com', which follow the last '@' symbol found. This means that using the current implementation, the email strings such as 'hello@dad', "@@", "@  b@c", "@monkey", and "myuser@" would be erroneously counted as valid.
 
 - Type Safety Risk of Each Email in Emails: If the emails iterable (e.g. a list) contains non-string data types (e.g., [943, ["da@b.com"], None]), the line 'if "@" in email' will raise a TypeError, and crash the program.
 
@@ -162,7 +162,12 @@ The current implementation relies on a single @ check, which introduces several 
 
 
 ### Code quality / design issues
-- 
+- 1. Logic & Validation Issues
+    False Positives: The string "me@" or "@@@" or  would be counted as valid, altough they are not real email addresses.
+
+Missing Standards: The current code does not check for a top-level domain (like 'gmail'), a dot (.), a domain (like 'com'), and invalid charachters. 
+
+Boundary Cases: An empty string or a list of integers would cause this to either return 0 or crash, depending on the input type.
 
 ## 2) Proposed Fixes / Improvements
 ### Summary of changes
