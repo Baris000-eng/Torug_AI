@@ -391,7 +391,16 @@ Scenario: For example, the following list: [10, float('inf'), float('nan'), 30, 
 > This function calculates the average of valid measurements by ignoring missing values (None) and averaging the remaining values. It safely handles mixed input types and ensures an accurate average
 
 ### Issues in original explanation
-- 
+- Incorrect Logic Description: The original explanation says it averages "the remaining values,"; however, the code divides by 'len(values)', which is the total input size, not by the count of valid measurements. This results in an incorrect average if None values ​​are present.
+
+- Ignores Edge Cases: It does not mention how it handles an empty (ZeroDivisionError) / a None-type list  or infinite/NaN values. Using an empty values list 
+will cause program to throw ZeroDivisionError, and using a none-type values list will cause program to throw TypeError in the for loop, since a None-type variable is not an iterable. 
+
+- No Information About the Type of 'values' Parameter: There is no information about the type of the values parameter. It should specify that the values parameter
+should be an iterable, specifically a list-, tuple-, set-, or range-type.
+
+- Lacks Robustness Information: It fails to mention that the code crashes if a value cannot be converted to a float (e.g. a string "dog").
+
 
 ### Rewritten explanation
 - 
