@@ -152,13 +152,13 @@ Unknowns may include extremely large datasets or very large and finite values of
 - Handling of Edge Cases: The ai-generated explanation claims that it "safely ignores invalid entries,"; however, this is misleading. If the input iterable (e.g. a list) contains non-string objects (such as integers, floats, lists, or None), the line 'if "@" in email' will raise a TypeError, which causes the entire function to crash.
 
 ### Edge cases & risks
-- The current implementation relies on a single @ check, which introduces several edge cases and risks:
-
-- Type Safety Risk of Each Email in Emails: If the emails iterable (e.g. a list) contains non-string data types (e.g., [943, ["da@b.com"], None]), the line 'if "@" in email' will raise a TypeError, and crash the program.
+The current implementation relies on a single @ check, which introduces several edge cases and risks:
 
 - Missing Domain and Top-Level Domain (TLD) Validation: The current implementation of the function does not find the last '@' symbol in the email. Moreover, it does not verify the presence of a dot (.), a domain like 'gmail', and a top-level domain like '.com', which follow the last '@' symbol found. This means that using the current implementation, the email strings such as 'hello@dad', "@@", "@  b@c", "@monkey", and "myuser@" would be erroneously counted as valid.
 
-- Type Safety Risk 
+- Type Safety Risk of Each Email in Emails: If the emails iterable (e.g. a list) contains non-string data types (e.g., [943, ["da@b.com"], None]), the line 'if "@" in email' will raise a TypeError, and crash the program.
+
+- Type Safety Risk of Emails Input Parameter: The current implementation of the function does not validate the 'emails' parameter. It should not be None or empty, and it should be an iterable such as list, tuple, and set. We should add these checks in order to properly handle incompatible/malformed 'emails' input parameter.
 
 
 ### Code quality / design issues
