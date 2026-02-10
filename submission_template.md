@@ -14,26 +14,24 @@
 
 - Irrespective of how many orders are cancelled, we are currently dividing the total order amount by the length (len(orders)) of the orders data structure (e.g. a list). This means that the count of the cancelled orders are still included in the divisor, even though they are excluded from the total order value. So, this will skew and give the wrong average order value at the end. 
 
-- No type validation is performed on the orders, each order in the orders, and the values existing in each order. order["status"] might not be of type string (such as int, float, or None), which will cause error while comparing it with "cancelled". Moreover, order["amount"] can be a None, string, or a non-numeric value. This would cause a ValueError or TypeError. 
-
-- Each order in orders data structure can be a data type other than a dictionary. We need to ensure that each order in orders to be a dictionary. 
-
 
 ### Edge cases & risks
-- For the empty input parameter of orders (such as list(), [], and tuple()), the count will be zero. Therefore, while calculating the average order value (total / count), the current version of the code will throw a divide-by-zero error. 
+- For the empty (such as list(), and []) or None-type input parameter 'orders', the count will be zero. Therefore, while calculating the average order value (total / count), the current version of the code will throw a divide-by-zero (ZeroDivision) error. 
 
 - Orders data structure can be empty or None, or it can be a data type other than the list, tuple, or set. These cases are not handled in the current version of the code. 
+
+- No type validation is performed on the orders, each order in the orders, and the values existing in each order. order["status"] might not be of type string (such as int, float, or None), which will cause error while comparing it with the string "cancelled". Moreover, order["amount"] can be a None-type, a string-type, or a non-numeric value. This would cause a ValueError or TypeError. 
+
+- Each order in orders data structure can be a data type other than a dictionary. We need to ensure that each order in orders to be a dictionary. 
 
 - Order amounts with infinite values are included in the current version, which will skew the average order value calculation. 
 
 - Order status check is done in a case-sensitive manner. One can type the order status value as "CANcelled". It will also mean that the order is cancelled and we need to do this check in a case-insensitive manner. If not, then we will skip such values of the order statuses, which will lead to a wrong average order value.
 
 
-
 - Order amounts can be accidentally given as NaN (Not-a-Number) values, which will directly make the average order value NaN. We should also avoid this scenario. 
 
 - Free purchases (order["amount"] = 0), or completed but returned orders after completion (order["amount"] < 0) are included in the non-cancelled orders. Depending on the business requirements, we may prefer seperating these scenarios with different keys (such "free" and "returned"), or specify it in the docstring that the non-cancelled orders include/exclude the free purchases and/or the returned orders after completion. 
-
 
 
 ### Code quality / design issues
@@ -155,12 +153,10 @@ Unknowns may include extremely large datasets or very large and finite values of
 "@@abc@"
 "ahmet123@"
 
-- Handling of Edge Cases: The ai-generated explanation claims that it "safely ignores invalid entries,"; however, this is misleading. If the input iterable (e.g. a list) contains non-string objects (such as integers, floats, lists, or None), the line 'if "@" in email' will raise a TypeError, which causes the entire function to crash.
-
 ### Edge cases & risks
 The current implementation relies on a single @ check, which introduces several edge cases and risks:
 
-- Type Safety Risk of Each Email in Emails: If the emails iterable (e.g. a list) contains non-string data types (e.g., [943, ["da@b.com"], None]), the line 'if "@" in email' will raise a TypeError, and crash the program.
+- Type Safety Risk of Each Email in Emails: If the emails iterable (e.g. a list) contains non-string data types such as integers, floats, lists, and None (e.g., [943, ["da@b.com"], 15.93, 2, None, 1, 0.99, None]), the line 'if "@" in email' will raise a TypeError, and crash the function.
 
 - Type Safety Risk of 'Emails' Input Parameter: The current implementation of the function does not validate the 'emails' parameter. It should not be None or empty, and it should be an iterable such as list, tuple, and set. We should add these checks in order to properly handle incompatible/malformed 'emails' input parameter.
 
@@ -204,8 +200,9 @@ length to be between 3 and 33 characters.
 
 * Ends username with an alphanumeric character: [a-z0-9] ensures the username part does not end with a dot.
 
-* Domain structure: @[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$ ensures the email has a @symbol, followed by a domain name (alphanumeric, hyphens, dots), 
-and ends with a top-level domain (like .comor .org) that is at least 2 characters long.
+* Domain structure: '@[a-zA-Z0-9.-]{2,30}+\.[a-zA-Z]{2,20}$' ensures the email has an '@' symbol, followed by a domain name (alphanumeric, hyphens, dots), 
+that is at least 2 charachters and at most 30 charachters long, and ends with a top-level domain (like 'com' or 'org'), that is at least 2 characters and 
+at most 20 charachters long.
 
 - I added checks to ensure the input is actually a list, tuple, or set, and I handle empty/None inputs properly with 'if not emails'.
 
@@ -300,10 +297,14 @@ domain (such as '.com', and '.org') that is at least 2 characters long.
 
 - Justification: It was approved because it successfully transitioned from a simplistic substring check ('@' in email) to a robust, regex-based validation. 
 It correctly handles various input data types (lists, tuples, sets), ensures only strings are processed to prevent runtime errors, and enforces strict structural 
-rules for email addresses. Moreover, the updated implementation correctly handles the empty input, and safely ignores 
-the invalid entries (such as non-iterable emails, None emails, and non-string email in the emails list). 
+rules for email addresses. Moreover, the updated implementation correctly handles the empty input, and safely ignores the invalid entries (such as non-iterable emails (specifically, 'emails' input that is not a list, tuple, or set), None emails, and non-string email in the emails list). 
 
-- Confidence & unknowns: There is a high confidence. There are no notable unknowns regarding the code logic or the requirements of the explanation.
+- Confidence & unknowns: The application appears to function correctly overall; however, it does not verify whether the domain name and top-level domain in an 
+email address actually exist. There is a high level of confidence in the updated implementation. However, the confidence in the validity of the domain name and top-level 
+domain name is lower. This is because it is assumed that the domain and top-level domain names provided in the email belong to publicly available resources. Currently, 
+the implementation does not explicitly verify whether the domain name and top-level domain name included in the email exist in publicly available resources such as 
+databases and APIs. For this reason, if we use, for example, “donkey” as the domain name and “monkey” as the top-level domain name in an email address, the implementation 
+would still treat it as valid because it matches the provided regular expression, even though such a domain name and a top-level domain name do not exist in the real world.
 
 ---
 
@@ -311,17 +312,44 @@ the invalid entries (such as non-iterable emails, None emails, and non-string em
 
 ## 1) Code Review Findings
 ### Critical bugs
-- 
+- Incorrect Average Calculation: You were dividing the total sum of valid numbers by the total length of the list (including None values), rather than by the count of valid numbers.
+
+- ZeroDivisionError: If the input iterable is empty ([], count = len(values) = 0) or contains only None values, the code attempts to divide by zero.
+
 
 ### Edge cases & risks
-- 
+- Each value in values can be infinite or NaN (Not-a-Number (or Not-Defined)). We should check whether the value is finite by using the 'math.isfinite()' function. 
+
+- Potential TypeError: If the iterable (e.g. a list) contained strings that could not be converted to a float (e.g., ["13", "horse", "apple"]), float(v) would crash the program.
+
+- The values parameter is not an iterable: We need to ensure that the values input is an iterable, and it is a list-, tuple-, set-, or range-type of input. 
 
 ### Code quality / design issues
-- 
+- The 'count' includes None values: The count is set to len(values) before filtering out None. However, the loop skips None, so the average is incorrect if some values are None. It should count only valid measurements. 
+
+- Type conversion inside the loop: The float(v) conversion is used without handling potential exceptions. If v is not None but not convertible to float, it will crash.
+
+- Division by zero risk: If the values is empty or contains only None, total / count will raise ZeroDivisionError.
+
+- Variable clarity: The variable name 'v' is not very descriptive; value is better. The total and count are okay to use but we could use valid_totalvalid_count
+and valid_total to make 
+
+total and count are okay, but could use valid_total and valid_count to make it clear they relate only to valid values.
+
+- No docstring and type hint parts: Adding short docstring and type hint parts improves code readability, maintainability, and extensibility. 
 
 ## 2) Proposed Fixes / Improvements
 ### Summary of changes
-- 
+- Input Validation: At the beginning of the function, a check is performed to verify that the input is a valid iterable type (list, tuple, etc.) and is not empty or None.
+
+- Error Handling: A try-except block is utilized to safely skip values that cannot be converted to a float, preventing the application from crashing on incompatible or malformed data.
+
+- Dynamic Counting: Instead of using the total length of the input, a valid_count is tracked so that the sum is only divided by the number of truly usable measurements.
+
+- Zero Division Protection: A final safety check (valid_count == 0) is implemented to return 0.0 if no valid data points are found, ensuring no ZeroDivisionError is triggered.
+
+- Mathematical Filtering: Non-finite numbers (such as NaN or Infinity) are excluded via math.isfinite() to ensure the average remains a meaningful real number.
+
 
 ### Corrected code
 See `correct_task3.py`
@@ -331,6 +359,27 @@ See `correct_task3.py`
 ### Testing Considerations
 If you were to test this function, what areas or scenarios would you focus on, and why?
 
+- Input Type Integrity (The "Iterable" Check)
+Since the new implementation strictly validates the input type, we need to ensure it doesn't crash when it receives something it doesn't expect.
+
+Scenario: Pass an integer, a string, or None instead of a list. We need to test this scenario to verify that the isinstance check is executed 
+correctly and returns 0.0 instead of raising an AttributeError.
+
+- Malformed String Handling
+In real-world data (like csv exports), numbers often arrive as strings.
+
+Scenario: A list containing valid numeric strings ("17.8"), malformed strings ("12a.6"), and empty strings (""). We need to test this scenario 
+to ensure that the try-except block is utilized to skip the "garbage" while still extracting the valid data.
+
+- Incompatible Types and Constants
+Data feeds often contain placeholders for missing data.
+
+Scenario: A list containing None, True/False, or nested lists. We need to test this scenario to confirm that None is filtered out and that other incompatible types do not accidentally get converted to 1.0 or 0.0 (which Python sometimes does with Booleans).
+
+- Mathematical Edge Cases (Inf and NaN)
+Standard math operations fail or become disrupted when they encounter non-finite numbers.
+
+Scenario: For example, the following list: [10, float('inf'), float('nan'), 30, 40]. We need to test this scenario to verify that math.isfinite() is successfully applied. The result should be 15.0 (the average of 10 and 20), proving that the "poisonous" values were excluded.
 
 ## 3) Explanation Review & Rewrite
 ### AI-generated explanation (original)

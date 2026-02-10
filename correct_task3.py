@@ -3,14 +3,39 @@
 import math 
 
 def average_valid_measurements(values):
+    """
+    Calculates the arithmetic mean of valid, finite numerical measurements.
 
-    if not values or (not isinstance(values, (list, tuple, set))):
+    This function iterates through an iterable of potential measurements,
+    filters out `None` values, attempts to convert remaining values to floats,
+    and ensures they are finite numbers (not NaN or Infinity).
+
+    It robustly handles:
+    - Different iterable types (`list`, `tuple`, `set`, `range`).
+    - Values that can be cast to float (e.g., strings containing numbers).
+    - Non-finite numbers (`inf`, `-inf`, `nan`).
+    - Invalid data types that cause `ValueError` during casting.
+
+    Args:
+        values: An iterable containing numerical data, strings representing
+            numbers, or `None`.
+
+    Returns:
+        float: The average of the valid measurements. Returns **0.0** if
+        the input is empty, invalid, or contains no valid numerical data.
+
+    Example:
+        > data = [5, "15", None, 40.5, float('nan'), float('inf')]
+        > average_valid_measurements(data)
+        20.166666666666668
+    """
+    if not values or (not isinstance(values, (list, tuple, set, range))):
         return 0.0
 
     total = 0.0
     valid_count = 0
 
-    for v in list(values):
+    for v in values:
         if v is not None:
             try:
                 num = float(v)
@@ -29,3 +54,6 @@ def average_valid_measurements(values):
         return 0.0
 
     return total / valid_count
+
+
+# print(average_valid_measurements(range(1, 5)))
