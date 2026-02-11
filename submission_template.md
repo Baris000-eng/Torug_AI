@@ -200,27 +200,25 @@ EMAIL_REGEX = re.compile(
 
 What does this email regex check?: 
 
-* Starts with alphanumeric character: ^[a-zA-Z0-9] ensures the email begins with a letter or number, not a special character.
+* Starts with alphanumeric character: "^[a-zA-Z0-9]" ensures the email begins with a letter or number, not a special character.
 
-* No consecutive dots: (?!.*\.{2}) is a negative lookahead which ensures that two or more dots 
+* No consecutive dots: "(?!.*\.{2})" is a negative lookahead which ensures that two or more dots 
 in a row are not allowed (e.g., myuser123....name@example.com is invalid).
 
-* Username length and content: [a-zA-Z0-9._-]{3,33} allows letters, numbers, and dots for the username, restricting the total 
+* Username length and content: "[a-zA-Z0-9._-]{3,33}" allows letters, numbers, and dots for the username, restricting the total 
 length between the first and last charachters to be between 3 and 33 characters, thus the total username length to be between
 5 and 35 charachters. 
 
-* Ends username with an alphanumeric character: [a-zA-Z0-9] ensures the username part ends with an alphanumerical character and does not end with a dot.
+* Ends username with an alphanumeric character: "[a-zA-Z0-9]" ensures the username part ends with an alphanumerical character and does not end with a dot.
 
-* Domain structure: '[a-zA-Z0-9](?!.*\.{2})[a-zA-Z0-9.-]{0,28}[a-zA-Z0-9]\.[a-zA-Z]{2,20}$' ensures the email has an '@' symbol, followed by a domain name (like gmail) which includes alphanumerical characters, hyphens, or dots, and which is at least 2 charachters and at most 30 charachters long. Moreover, this structure enssures that the email ends with a top-level domain (like 'com' or 'org'), which includes alphabetical charachters, and which is at least 2 characters and at most 20 charachters long.
+* 
+
+* Domain structure: "@[a-zA-Z0-9](?!.*\.{2})[a-zA-Z0-9.-]{0,28}[a-zA-Z0-9]\.[a-zA-Z]{2,20}$" ensures the email has an '@' symbol, followed by a domain name (like gmail) which includes alphanumerical characters, hyphens, or dots, and which is at least 2 charachters and at most 30 charachters long. This part of the regex also makes sure that the domain name can start and end with only alphanumerical charachters. Moreover, this structure ensures that the email ends with a top-level domain (like 'com' or 'org'), which includes alphabetical charachters, and which is at least 2 characters and at most 20 charachters long. 
 
 - Some checks are added to ensure the input is actually a list, tuple, or set, and I handle empty/None inputs properly with 'if not emails'.
 
 - A dedicated helper function is_valid_email() is created with the email parameter to make the code cleaner, more readable, 
-easier to test, and easier to change. In this helper function, I added the 'isinstance(email, str)' check to ensure the code does not crash if 
-a non-string object is passed in the list. I have used a full match check with the provided email regex, 'bool(EMAIL_REGEX.fullmatch(email))', to 
-ensure that the provided email is fully matching with the email format given in the email regex, and no extra text is allowed before or 
-after the valid structure . This guarantees that a string like "user@example.comextratexthere" is correctly identified as invalid.
-Moreover, I have called this function for each email in emails. If the email is valid, I have incremented the valid email counter by one. 
+easier to test, and easier to change. In this helper function, I added the 'isinstance(email, str)' check to ensure the code does not crash if a non-string object is passed in the list. I have used a full match check with the provided email regex, 'bool(EMAIL_REGEX.fullmatch(email))', to ensure that the provided email is fully matching with the email format given in the email regex, and no extra text is allowed before or after the valid structure . This guarantees that a string like "user@example.comextratexthere" is correctly identified as invalid. Moreover, I have called this function for each email in emails. If the email is valid, I have incremented the valid email counter by one. 
 
 - Docstrings and some useful comments are added to the count_valid_emails() and is_valid_email() function to improve the code readability, maintainability, and extensibility. 
 
@@ -297,9 +295,7 @@ counts them as valid simply because they contain an '@' symbol.
 
  > Ends with alphanumeric: The username must end with a letter or number, not a dot.
 
- > Domain Structure: After the username ends, an '@' symbol should come. Then, a valid '@' symbol must be followed by a domain name, and then a top-level 
-> domain (such as 'com', and 'org'). The domain name is set to have at least 2 and at most 30 charachters, while the top-level domain name is set to have 
-> at least 2 and at most 20 charachters.  Moreover, the top-level domain name can only include alphabetical charachters, while the domain name can include alphanumerical charachters, hypens, and dots. 
+ > Domain Structure: After the username ends, an '@' symbol should come. Then, a valid '@' symbol must be followed by a domain name, and then a top-level domain (such as 'com', and 'org'). The domain name is set to have at least 2 and at most 30 charachters, while the top-level domain name is set to have at least 2 and at most 20 charachters.  The domain name can start and end with only alphanumerical charachters. Moreover, the top-level domain name can only include alphabetical charachters, while the domain name can include alphanumerical charachters, hypens, and dots. 
 
 > Error Handling: The function (specifically is_valid_email(email)) verifies that each item is a string (isinstance(email, str)) before validation, 
 > ensuring non-string items within the input list are safely ignored and the function does not crash.
