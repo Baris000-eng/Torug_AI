@@ -4,9 +4,13 @@
 import math
 
 def is_valid_orders_data(orders): 
-    """It validates a collection of orders. It ensures that the orders input is a non-Empty and non-None iterable (list, tuple, set).
-    If the input is valid, it returns True; otherwise, it returns False."""
-    # Validation: Check if input is empty, None, or not an allowed iterable type."""
+    """It validates a collection of orders. It ensures that the orders input is a non-empty and non-None iterable (list, tuple, set).
+    Args: 
+        orders: An iterable containing order data.
+    Returns: 
+        True if the orders parameter is a non-empty and non-None iterable of the correct type, False otherwise."""
+    # Validation: Check if input is empty, None, or not an allowed iterable type.
+    # Return False if the parameter is invalid, True otherwise.
     if not orders or (not isinstance(orders, (list, tuple, set))):
         return False 
     return True 
@@ -16,8 +20,12 @@ def is_valid_order(order) -> bool:
     An order is considered valid if: 
     - It can be cast to a dictionary.
     - It contains the keys 'status' and 'amount'.
-    - The status is not 'cancelled' in a case-insensitive manner (e.g., 'CANCELLED', 'cANcELLeD', 'Cancelled', etc.)."""
-    # Type Checking: Attempt to convert order to a dictionary (e.g., if it's a tuple of tuples).
+    - The order status is not 'cancelled' in a case-insensitive manner (e.g., 'CANCELLED', 'cANcELLeD', 'Cancelled', etc.).
+    Args: 
+        order: The order to be validated, which has ideally a dictionary-like structure.
+    Returns:
+        True if the order is valid, False otherwise."""
+    # Type Checking: Attempt to convert order to a dictionary structure.
     try:
         order = dict(order)
     except:

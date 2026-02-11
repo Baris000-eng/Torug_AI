@@ -6,7 +6,8 @@ def is_valid_measurements_data(values):
     """It validates an iterable of measurement values. It ensures that the values input is a 
     non-empty and non-None iterable (list, tuple, set, range). If the input is valid, it returns 
     True; otherwise, it returns False."""
-    # Validation: Check if input is empty, None, or not an allowed iterable type. Return False if invalid,  True if valid.
+    # Validation: Check if input is empty, None, or not an allowed iterable type. Return False 
+    # if the parameter is invalid, True if valid.
     if not values or (not isinstance(values, (list, tuple, set, range))):
         return False 
     return True 

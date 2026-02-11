@@ -27,7 +27,10 @@ EMAIL_REGEX = re.compile(
 def is_valid_emails_data(emails): 
     """It validates a collection of email addresses. It ensures that 
     the emails input is a non-empty and non-None iterable (list, tuple, set).
-    If the input is valid, it returns True; otherwise, it returns False."""
+    Args:
+        emails: An iterable containing email addresses. 
+    Returns: 
+        True if the emails parameter is a non-empty and non-None iterable of the correct type, False otherwise."""
     # Input Validation: Check if input is empty, None, or not an allowed iterable type.
     if not emails or not isinstance(emails, (list, tuple, set)):
         return False 
