@@ -4,9 +4,10 @@ import math
 
 def validate_measurements(values): 
     """It validates a collection of measurement values. It ensures that the values input is a non-empty/non-None iterable (list, tuple, set, range)"""
-    # Validation: Check if input is empty, None, or not an allowed iterable type.
+    # Validation: Check if input is empty, None, or not an allowed iterable type. Return False if invalid,  True if valid.
     if not values or (not isinstance(values, (list, tuple, set, range))):
-        return 0.0
+        return False 
+    return True 
     
 def validate_measurement(value):
     """It validates a single measurement"""
@@ -52,7 +53,8 @@ def average_valid_measurements(values):
         20.166666666666668
     """
 
-    validate_measurements(values)
+    if validate_measurements(values) == False: 
+         return 0.0
 
     total = 0.0
     valid_count = 0
