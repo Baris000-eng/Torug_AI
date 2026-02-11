@@ -56,13 +56,13 @@ def average_valid_measurements(values):
     if validate_measurements(values) == False: 
          return 0.0
 
-    total = 0.0
+    valid_total = 0.0
     valid_count = 0
 
     # Iteration: Loop through each item in the iterable.
     for value in values:
         if validate_measurement(value):
-            total += float(value)
+            valid_total += float(value)
             valid_count += 1
         else:
              # Skip invalid measurement values.
@@ -73,7 +73,7 @@ def average_valid_measurements(values):
         return 0.0
 
     # Calculation: Return the arithmetic mean of valid measurements. 
-    return total / valid_count
+    return valid_total / valid_count
 
 
 # print(average_valid_measurements(["10", "10.5", "20.5"]))

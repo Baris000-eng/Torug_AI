@@ -82,14 +82,14 @@ def calculate_average_order_value(orders):
     if validate_orders(orders) == False: 
         return 0.0
 
-    total = 0.0
+    valid_total = 0.0
     valid_count = 0
 
     for order in orders:
         if is_valid_order(order): 
                 amount = order["amount"]
                 if is_valid_order_amount(amount):
-                    total += float(amount)
+                    valid_total += float(amount)
                     valid_count += 1
                 else:
                     # Amount is invalid, so skip this order. 
@@ -104,4 +104,4 @@ def calculate_average_order_value(orders):
         return 0.0 
 
     # Calculation: Compute and return the arithmetic mean.
-    return total / valid_count
+    return valid_total / valid_count
