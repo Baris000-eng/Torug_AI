@@ -62,8 +62,8 @@ def average_valid_measurements(values):
     # Iteration: Loop through each item in the iterable.
     for value in values:
         if validate_measurement(value):
-                    total += float(value)
-                    valid_count += 1
+            total += float(value)
+            valid_count += 1
         else:
              # Skip invalid measurement values.
              continue 

@@ -89,8 +89,8 @@ def calculate_average_order_value(orders):
         if is_valid_order(order): 
                 amount = order["amount"]
                 if is_valid_order_amount(amount):
-                        total += float(amount)
-                        valid_count += 1
+                    total += float(amount)
+                    valid_count += 1
                 else:
                     # Amount is invalid, so skip this order. 
                     continue 

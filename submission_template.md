@@ -211,9 +211,7 @@ length between the first and last charachters to be between 3 and 33 characters,
 
 * Ends username with an alphanumeric character: "[a-zA-Z0-9]" ensures the username part ends with an alphanumerical character and does not end with a dot.
 
-* 
-
-* Domain structure: "@[a-zA-Z0-9](?!.*\.{2})[a-zA-Z0-9.-]{0,28}[a-zA-Z0-9]\.[a-zA-Z]{2,20}$" ensures the email has an '@' symbol, followed by a domain name (like gmail) which includes alphanumerical characters, hyphens, or dots, and which is at least 2 charachters and at most 30 charachters long. This part of the regex also makes sure that the domain name can start and end with only alphanumerical charachters. Moreover, this structure ensures that the email ends with a top-level domain (like 'com' or 'org'), which includes alphabetical charachters, and which is at least 2 characters and at most 20 charachters long. 
+* Domain structure: "@[a-zA-Z0-9](?!.*\.{2})[a-zA-Z0-9.-]{0,28}[a-zA-Z0-9]\.[a-zA-Z]{2,20}$" ensures the email has an '@' symbol, followed by a domain name (like gmail) which includes alphanumerical characters, hyphens, or dots, and which is at least 2 charachters and at most 30 charachters long. This part of the regex also makes sure that the domain name can start and end with only alphanumerical charachters, and cannot contain consecutive dots. Moreover, this structure ensures that the email ends with a top-level domain (like 'com' or 'org'), which includes alphabetical charachters, and which is at least 2 characters and at most 20 charachters long. 
 
 - Some checks are added to ensure the input is actually a list, tuple, or set, and I handle empty/None inputs properly with 'if not emails'.
 
@@ -295,7 +293,7 @@ counts them as valid simply because they contain an '@' symbol.
 
  > Ends with alphanumeric: The username must end with a letter or number, not a dot.
 
- > Domain Structure: After the username ends, an '@' symbol should come. Then, a valid '@' symbol must be followed by a domain name, and then a top-level domain (such as 'com', and 'org'). The domain name is set to have at least 2 and at most 30 charachters, while the top-level domain name is set to have at least 2 and at most 20 charachters.  The domain name can start and end with only alphanumerical charachters. Moreover, the top-level domain name can only include alphabetical charachters, while the domain name can include alphanumerical charachters, hypens, and dots. 
+ > Domain Structure: After the username ends, an '@' symbol should come. Then, a valid '@' symbol must be followed by a domain name, and then a top-level domain (such as 'com', and 'org'). The domain name is set to have at least 2 and at most 30 charachters, while the top-level domain name is set to have at least 2 and at most 20 charachters.  The domain name can start and end with only alphanumerical charachters, and cannot contain consecutive dots. Moreover, the top-level domain name can only include alphabetical charachters, while the domain name can include alphanumerical charachters, hypens, and dots. 
 
 > Error Handling: The function (specifically is_valid_email(email)) verifies that each item is a string (isinstance(email, str)) before validation, 
 > ensuring non-string items within the input list are safely ignored and the function does not crash.
@@ -339,9 +337,7 @@ Moreover, the unknowns may include extremely large 'emails' parameter. We may us
 
 - Division by zero risk: If the values is empty or contains only None, 'total / count' operation will raise ZeroDivisionError.
 
-- Variable clarity: The variable name 'v' is not very descriptive; for example value is better. The total and count are okay to use but we could use valid_total and valid_count
-to make it clear that they relate only to valid values.
-
+- Variable clarity: The variable name 'v' is not very descriptive; for example the name 'value' is better for more clarity. 
 
 
 ## 2) Proposed Fixes / Improvements
