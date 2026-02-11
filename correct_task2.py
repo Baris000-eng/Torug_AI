@@ -24,6 +24,15 @@ EMAIL_REGEX = re.compile(
     r"\.[a-zA-Z]{2,20}$"                                       # Extension part (Top-Level Domain (TLD)) with length restrictions
 , re.VERBOSE)
 
+def is_valid_emails_data(emails): 
+    """It validates a collection of email addresses. It ensures that 
+    the emails input is a non-empty and non-None iterable (list, tuple, set).
+    If the input is valid, it returns True; otherwise, it returns False."""
+    # Input Validation: Check if input is empty, None, or not an allowed iterable type.
+    if not emails or not isinstance(emails, (list, tuple, set)):
+        return False 
+    return True 
+
 def is_valid_email(email: str) -> bool:
     """
     Checks if a string is a valid email address based on predefined regex rules.
@@ -47,14 +56,6 @@ def is_valid_email(email: str) -> bool:
     return isinstance(email, str) and bool(EMAIL_REGEX.fullmatch(email))
 
 
-def validate_emails(emails): 
-    """It validates a collection of email addresses. It ensures that 
-    the emails input is a non-empty/non-None iterable (list, tuple, set)"""
-    # Input Validation: Check if input is empty, None, or not an allowed iterable type.
-    if not emails or not isinstance(emails, (list, tuple, set)):
-        return False 
-    return True 
-
 def count_valid_emails(emails):
     """
     Counts the number of valid email addresses within a collection.
@@ -77,7 +78,7 @@ def count_valid_emails(emails):
         > count_valid_emails(email_list)
         2
     """
-    if validate_emails(emails) == False:
+    if is_valid_emails_data(emails) == False:
         return 0
 
     valid_email_count = 0

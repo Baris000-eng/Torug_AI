@@ -2,15 +2,20 @@
 # Do not modify `task3.py`.
 import math 
 
-def validate_measurements(values): 
-    """It validates a collection of measurement values. It ensures that the values input is a non-empty/non-None iterable (list, tuple, set, range)"""
+def is_valid_measurements_data(values): 
+    """It validates an iterable of measurement values. It ensures that the values input is a 
+    non-empty and non-None iterable (list, tuple, set, range). If the input is valid, it returns 
+    True; otherwise, it returns False."""
     # Validation: Check if input is empty, None, or not an allowed iterable type. Return False if invalid,  True if valid.
     if not values or (not isinstance(values, (list, tuple, set, range))):
         return False 
     return True 
     
-def validate_measurement(value):
-    """It validates a single measurement"""
+def is_valid_measurement(value):
+    """It validates a single measurement. If the measured value is valid, it returns 
+    True; otherwise, it returns False. A valid measurement is a value 
+    that can be converted to a finite float (not Infinity (Inf) of Not-a-Number (NaN)) 
+    and is not a boolean (since bools are subclasses of int in Python)."""
     # Validation: Ensure value is not None and not a boolean (bools are subclasses of int).
     if value is not None and (not (isinstance(value, bool))):
         try: 
@@ -53,7 +58,7 @@ def average_valid_measurements(values):
         20.166666666666668
     """
 
-    if validate_measurements(values) == False:
+    if is_valid_measurements_data(values) == False:
          return 0.0
 
     valid_total = 0.0
@@ -61,7 +66,7 @@ def average_valid_measurements(values):
 
     # Iteration: Loop through each item in the iterable.
     for value in values:
-        if validate_measurement(value):
+        if is_valid_measurement(value):
             valid_total += float(value)
             valid_count += 1
         else:

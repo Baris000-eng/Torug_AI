@@ -3,8 +3,9 @@
 
 import math
 
-def validate_orders(orders): 
-    """It validates a collection of orders. It ensures that the orders input is a non-Empty/non-None iterable (list, tuple, set)"""
+def is_valid_orders_data(orders): 
+    """It validates a collection of orders. It ensures that the orders input is a non-Empty and non-None iterable (list, tuple, set).
+    If the input is valid, it returns True; otherwise, it returns False."""
     # Validation: Check if input is empty, None, or not an allowed iterable type."""
     if not orders or (not isinstance(orders, (list, tuple, set))):
         return False 
@@ -79,7 +80,7 @@ def calculate_average_order_value(orders):
         > calculate_average_order_value(orders)
         75.0
     """
-    if validate_orders(orders) == False: 
+    if is_valid_orders_data(orders) == False: 
         return 0.0
 
     valid_total = 0.0
