@@ -199,7 +199,9 @@ EMAIL_REGEX = re.compile(
     r"\.[a-zA-Z]{2,20}$"                                       # Extension part (Top-Level Domain (TLD)) with length restrictions
 , re.VERBOSE)
 
-What does this email regex check?: 
+What does this email structure validation regex check?: 
+
+* In this regex, 're.VERBOSE' flag/argument lets you write multi-line and readable regular expressions by ignoring unescaped whitespace characters and allowing comments. It only ignores whitespace characters meant for formatting the pattern, not whitespace characters that are part of the actual regex syntax.
 
 * Starts with alphanumeric character: "^[a-zA-Z0-9]" ensures the email begins with a letter or number, not a special character.
 
