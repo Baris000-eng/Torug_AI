@@ -16,7 +16,7 @@
 
 
 ### Edge cases & risks
-- For the empty (such as list(), and []) or None-type input parameter 'orders', the count will be zero. Therefore, while calculating the average order value (total / count), the current version of the code will throw a divide-by-zero (ZeroDivision) error. 
+- For the empty (such as list(), and []) or None-type parameter 'orders', the count will be zero. Therefore, while calculating the average order value (total / count), the current version of the code will throw a divide-by-zero (ZeroDivision) error. 
 
 - Orders data structure can be empty or None, or it can be a data type other than the list, tuple, or set. These cases are not handled in the current version of the code. 
 
@@ -37,12 +37,11 @@
 ### Code quality / design issues
 - Currently, the count and the total sum values are inconsistent with each other. The current version counts the invalid orders in the denominator, even though they are excluded from the total order value in the numerator. This will pull the average order value downwards. 
 
-- There is no try-except block to catch the ZeroDivisionError that might happen while calculating the average value. Moreover, there is no if statement that checks whether 
-the count is equal to 0 and then if so, proceed accordingly (e.g. return 0.0). We should add one of them to the code so that the divide-by-zero error (ZeroDivisionError) is avoided. 
+- There is no try-except block to catch the ZeroDivisionError that might happen while calculating the average value. Moreover, there is no if statement that checks whether the count is equal to 0 and then if so, proceed accordingly (e.g. return 0.0). We should add one of them to the code so that the divide-by-zero error (ZeroDivisionError) is avoided. 
 
 - Irrespective of how many orders are cancelled, we are currently dividing the total order amount by the length (len(orders)) of the orders data structure (e.g. a list). This means that the count of the cancelled orders are still included in the divisor, even though they are excluded from the total order value. So, this will skew and give the wrong average order value at the end. In order to handle this problem, before the iteration over the orders starts (before the for loop), we should initialize the count with zero. Then, if the order status is not cancelled, we need to increment the count by one. At the end, we have found the number of non-cancelled orders. 
 
-- In the current version, there are no docstring and comments. So, we cannot get a hint about the functional and non-functional requirements, and parameter. This will make the function harder to understand and/or maintain within a team. 
+- In the current version, there are no docstring and comments. So, we cannot get a hint about the functional and non-functional requirements, and the data types of the parameter and the elements inside it. This will make the function harder to understand, maintain, and/or develop within a team. 
 
 - There is no validation applied on the 'orders' data which is given as the parameter. This parameter should be a list/tuple/set of dictionaries. 
 
@@ -56,7 +55,7 @@ the count is equal to 0 and then if so, proceed accordingly (e.g. return 0.0). W
 - Division-by-zero bug is fixed: 'count = len(orders)' is replaced with 'valid_count', and 
 the valid_count is incremented only if the order is non-cancelled. An if statement checking whether the valid_count is 0 is added after the for loop. If so, we return 0.0 as the average. Through this if check, we can handle empty orders parameter (e.g. [] or list()) without any errors. 
 
-- Input parameter validation is added: It checks if order is not a list/tuple/set, or is empty, and return 0.0 as the average order value if so. 
+- Parameter validation is added: It checks if order is not a list/tuple/set, or is empty, and return 0.0 as the average order value if so. 
 
 - Case insensitive order status comparison: Conversion of order["status"] to lowercase, before comparing it with the "cancelled", is added. This string value could be given as "cancelled" or "canceled". The "canceled" is preferred in the American English, and the "cancelled" is preferred in the British English. So, both of these versions are correct. 
 
@@ -84,7 +83,7 @@ If you were to test this function, what areas or scenarios would you focus on, a
 
 The case, where the orders parameter, each order in orders, and the keys and values in each order are correctly structured and typed, should initially be tested. Because, our function should work seamlessly where the parameter is fully as expected.
 
-1. Empty or invalid input parameters : Because, the function explicitly checks for non-iterable or empty inputs. 
+1. Empty or invalid parameters : Because, the function explicitly checks for non-iterable or empty inputs. 
 
 2. Division by zero error protection is added: If all orders are cancelled (there are no valid orders), then the function returns 0.0.
 
@@ -109,9 +108,9 @@ The case, where the orders parameter, each order in orders, and the keys and val
 ### Issues in original explanation
 - The explanation should mention that the function divides by the number of non-cancelled (valid) orders, not the total number of orders which includes the non-cancelled ones as well.
 
-- The explanation should mention that the function safely handles a non-iterable, empty, or None-type input parameter by returning 0.0. For the empty input parameters (orders), doing this will avoid divide-by-zero errors and thus prevent function from crashing due to them. 
+- The explanation should mention that the function safely handles a non-iterable, empty, or None-type parameter by returning 0.0. For the empty parameters (orders), doing this will avoid divide-by-zero errors and thus prevent function from crashing due to them. 
 
-- The explanation should state that the input parameter 'orders' is an iterable, each order in orders is a dictionary-type, each amount in order is a finite and numeric value, and each status in order is a string-type. 
+- The explanation should state that the parameter 'orders' is an iterable, each order in orders is a dictionary-type, each amount in order is a finite and numeric value, and each status in order is a string-type. 
 
 - The explanation should highlight that the function treats "canceled" and "cancelled" in a case-insensitive manner. 
 
@@ -121,7 +120,7 @@ The case, where the orders parameter, each order in orders, and the keys and val
 
 
 ### Rewritten explanation
-> This function calculates the average monetary value of the valid and finite-valued orders from the input parameter orders, which should be an iterable. Each order is converted to a dictionary and is expected to contain a numeric, finite amount and a string status.
+> This function calculates the average monetary value of the valid and finite-valued orders from the parameter orders, which should be an iterable. Each order is converted to a dictionary and is expected to contain a numeric, finite amount and a string status.
 
 > The function processes each order by:
 
@@ -139,7 +138,7 @@ The case, where the orders parameter, each order in orders, and the keys and val
 
 - Confidence & unknowns: Confidence is high because the function has explicit validation steps and type conversions that safely handle most real-world data issues.
 
-Unknowns may include extremely large datasets or very large and finite values of order amounts. We may use the 'yield' keyword to process very large iterable of orders one-by-one, and Python's 'decimal' library to handle very large and finite values of amount. Using the 'yield' keyword will significantly reduce the memory usage, called as the space complexity, by using the lazy evaluation mechanism. The largest possible float value is 1.7976931348623158 * 10^308, which the monetary order value/amount might exceed. Using decimal module instead of the float will make us to have better precision in very large or very small order amounts. This will make our total of order amounts more robust, so that the average is better-represented. 
+Unknowns may include extremely large parameter size or very large and finite monetary values/amounts of the orders. We may use the 'yield' keyword to process very large iterable of orders one-by-one, and Python's 'decimal' library to handle very large and finite values of amount. Using the 'yield' keyword will significantly reduce the memory usage, called as the space complexity, by using the lazy evaluation mechanism. The largest possible float value is 1.7976931348623158 * 10^308, which the monetary order value/amount might exceed. Using decimal module instead of the float will make us to have better precision in very large or very small order amounts. This will make our total of order amounts more robust, so that the average is better-represented. 
 
 ---
 
@@ -159,7 +158,7 @@ The current implementation relies on a single @ check, which introduces several 
 
 - Type Safety Risk of Each Email in Emails: If the emails iterable (e.g. a list) contains non-string data types such as integers, floats, lists, and None (e.g., [943, ["da@b.com"], 15.93, 2, None, 1, 0.99, None]), the line 'if "@" in email' will raise a TypeError, and crash the function.
 
-- Type Safety Risk of 'Emails' Input Parameter: The current implementation of the function does not validate the 'emails' parameter. It should not be None or empty, and it should be an iterable such as list, tuple, and set. We should add these checks in order to properly handle incompatible/malformed 'emails' input parameter.
+- Type Safety Risk of 'Emails' Parameter: The current implementation of the function does not validate the 'emails' parameter. It should not be None or empty, and it should be an iterable such as list, tuple, and set. We should add these checks in order to properly handle incompatible/malformed 'emails' parameter.
 
 
 ### Code quality / design issues
@@ -169,13 +168,13 @@ The current implementation relies on a single @ check, which introduces several 
 
     - False Positives: The strings "@pear", "me@" and "@@@@"  would be counted as valid emails, although they are not real email addresses.
 
-    - In the current version, there are no docstring and comments. So, we cannot get a hint about the functional and non-functional requirements, the type of the orders parameter, and what type of values it includes. This will make the function harder to understand and/or maintain within a team. 
+    - In the current version, there are no docstring and comments. So, we cannot get a hint about the functional and non-functional requirements, the type of the orders parameter, and what type of values it includes. This will make the function harder to understand, maintain, and improve within a team. 
 
     - Type Safety Checks on Each Email: Each email in emails should be a string. To ensure this, we need to add a type safety check in our current code for each email. 
 
     - Missing Character Checks: The current code does not check whether invalid characters such as whitespace, special characters, and punctuation marks exist in the email. Moreover, it does not check whether alphanumerical characters exist in the email. These checks should be added to the current implementation to ensure that we have valid emails and that only they are counted.  
 
-    - Type Safety Risk of 'Emails' Input Parameter: The current implementation of the function does not validate the 'emails' parameter. It should be checked to ensure that it is not None and it is a non-empty iterable such as list, tuple, and set. These checks should be added in order to properly handle incompatible/malformed 'emails' input parameter. 
+    - Type Safety Risk of 'Emails' Parameter: The current implementation of the function does not validate the 'emails' parameter. It should be checked to ensure that it is not None and it is a non-empty iterable such as list, tuple, and set. These checks should be added in order to properly handle incompatible/malformed 'emails' parameter. 
     
 2. Code Maintainability Issue: 
     - The email validity logic is currently handled directly inside the count_valid_emails() function, which makes the function harder to read, test, and maintain. The email validation logic should be extracted into a separate helper function (e.g., is_valid_email()), and then called within count_valid_emails(). This separation would improve readability, promote reusability, simplify testing, and make future changes to the validation rules easier to manage.
@@ -276,7 +275,7 @@ counts them as valid simply because they contain an '@' symbol.
 ### Rewritten explanation
 > This function accurately counts valid email addresses and handles empty emails input correctly by implementing strict validation rules based on a robust regular expression.
 
-> Input Validation: The function checks if the input parameter emails is a valid iterable structure (list, tuple, or set) and handles empty or non-iterable inputs by returning a count of 0 immediately.
+> Input Validation: The function checks if the parameter emails is a valid iterable structure (list, tuple, or set) and handles empty or non-iterable inputs by returning a count of 0 immediately.
 
 > Strict String Validation: A dedicated helper function is_valid_email is used with re.fullmatch to enforce the following rules defined in the EMAIL_REGEX:
 
@@ -304,9 +303,9 @@ It correctly handles various input data types (lists, tuples, sets), ensures onl
 rules for email addresses. Moreover, the updated implementation correctly handles the empty input, and safely ignores the invalid entries (such as non-iterable emails (specifically, 'emails' input that is not a list, tuple, or set), None emails, and non-string email in the emails list). 
 
 - Confidence & unknowns: The application appears to function correctly overall; however, it does not verify whether the domain name and top-level domain in an 
-email address actually exist. There is a high level of confidence in the updated implementation. However, the confidence in the validity of the domain name and top-level domain name is lower. This is because it is assumed that the domain and top-level domain names provided in the email belong to publicly available resources. Currently, the implementation does not explicitly verify whether the domain name and top-level domain name included in the email exist in publicly available resources such as databases and APIs. For this reason, if we use, for example, “donkey” as the domain name and “monkey” as the top-level domain name in an email address, the implementation would still treat it as valid because it matches the provided regular expression, even though such a domain name and a top-level domain name do not exist in the real world. 
+email address actually exist. There is a high level of confidence in the updated implementation. However, the confidence in the validity of the domain name and top-level domain name is lower. This is because it is assumed that the domain and top-level domain names provided in the email belong to publicly available resources. Currently, the implementation does not explicitly verify whether the domain name and top-level domain name included in the email exist in publicly or privately available resources such as databases and APIs. For this reason, if we use, for example, “donkey” as the domain name and “monkey” as the top-level domain name in an email address, the implementation would still treat it as valid because it matches the provided regular expression, even though such a domain name and a top-level domain name do not exist in the real world. 
 
-Moreover, the unknowns may include extremely large emails iterable. iterable of emails could be too large, We may use the 'yield' keyword to process very large iterable of emails one-by-one. Using the 'yield' keyword will significantly reduce the memory usage, called as the space complexity, by using the lazy evaluation mechanism. 
+Moreover, the unknowns may include extremely large 'emails' parameter. We may use the 'yield' keyword to process very large iterable of emails one-by-one. Using the 'yield' keyword will significantly reduce the memory usage, called as the space complexity, by using the lazy evaluation mechanism. 
 
 ---
 
@@ -432,4 +431,4 @@ Error Prevention: The final check if 'valid_count == 0' safely handles cases whe
 
 - Confidence & unknowns:
 Confidence is high because the function has explicit validation steps and type conversions that safely handle most real-world data issues. Unknowns may 
-include extremely large values iterable, or very large and finite values. We may use the 'yield' keyword to process very large iterable of values one-by-one, and Python's 'decimal' library to handle very large and finite values that exceed the capacity of float() (e.g. 2.5 * 10^402). Using the 'yield' keyword will significantly reduce the memory usage, called as the space complexity, by using the lazy evaluation mechanism. The largest possible float value is 1.7976931348623158 * 10^308, which the measured value might exceed. Using the decimal module instead of the float will allow us to have better precision in very large or very small measured values. This will make our total of valid measurements more robust, so that the average is better-represented. 
+include extremely large size of the 'values' iterable, or very large and finite values. We may use the 'yield' keyword to process very large iterable of values one-by-one, and Python's 'decimal' library to handle very large and finite values that exceed the capacity of float() (e.g. 2.5 * 10^402). Using the 'yield' keyword will significantly reduce the memory usage, called as the space complexity, by using the lazy evaluation mechanism. The largest possible float value is 1.7976931348623158 * 10^308, which the measured value might exceed. Using the decimal module instead of the float will allow us to have better precision in very large or very small measured values. This will make our total of valid measurements more robust, so that the average is better-represented. 
