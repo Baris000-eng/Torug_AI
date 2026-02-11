@@ -190,7 +190,13 @@ proper structure (user, domain, and top-level domain) with appropriate type and 
 
 The email regex that is added: 
 
-EMAIL_REGEX = re.compile(r"^[a-zA-Z0-9](?!.*\.{2})[a-zA-Z0-9._-]{3,33}[a-zA-Z0-9]@[a-zA-Z0-9.-]{2,30}\.[a-zA-Z]{2,20}$")
+# Email Validation Regex: Defines the pattern for a structurally sound email address.
+EMAIL_REGEX = re.compile(
+    r"^[a-zA-Z0-9](?!.*\.{2})[a-zA-Z0-9._-]{3,33}[a-zA-Z0-9]"  # Username part with length restrictions and no consecutive dots 
+    r"@"                                                       # The '@' symbol seperating the username and domain
+    r"[a-zA-Z0-9](?!.*\.{2})[a-zA-Z0-9.-]{0,28}[a-zA-Z0-9]"    # Domain part with length restrictions 
+    r"\.[a-zA-Z]{2,20}$"                                       # Extension part (Top-Level Domain (TLD)) with length restrictions
+, re.VERBOSE)
 
 What does this email regex check?: 
 
@@ -205,8 +211,7 @@ length between the first and last charachters to be between 3 and 33 characters,
 
 * Ends username with an alphanumeric character: [a-zA-Z0-9] ensures the username part ends with an alphanumerical character and does not end with a dot.
 
-* Domain structure: '@[a-zA-Z0-9.-]{2,30}\.[a-zA-Z]{2,20}$' ensures the email has an '@' symbol, followed by a domain name (like gmail) which includes alphanumerical characters, hyphens, or dots, 
-which is at least 2 charachters and at most 30 charachters long, and ends with a top-level domain (like 'com' or 'org'), which includes alphabetical charachters and which is at least 2 characters and at most 20 charachters long.
+* Domain structure: '[a-zA-Z0-9](?!.*\.{2})[a-zA-Z0-9.-]{0,28}[a-zA-Z0-9]\.[a-zA-Z]{2,20}$' ensures the email has an '@' symbol, followed by a domain name (like gmail) which includes alphanumerical characters, hyphens, or dots, and which is at least 2 charachters and at most 30 charachters long. Moreover, this structure enssures that the email ends with a top-level domain (like 'com' or 'org'), which includes alphabetical charachters, and which is at least 2 characters and at most 20 charachters long.
 
 - Some checks are added to ensure the input is actually a list, tuple, or set, and I handle empty/None inputs properly with 'if not emails'.
 
