@@ -2,7 +2,7 @@
 
 ## Candidate
 - Name: Barış Kaplan 
-- Approximate time spent: 120 minutes (2 hours)
+- Approximate time spent: 135 minutes (2 hours 15 minutes)
 
 ---
 
@@ -42,7 +42,7 @@ the count is equal to 0 and then if so, proceed accordingly (e.g. return 0.0). W
 
 - Irrespective of how many orders are cancelled, we are currently dividing the total order amount by the length (len(orders)) of the orders data structure (e.g. a list). This means that the count of the cancelled orders are still included in the divisor, even though they are excluded from the total order value. So, this will skew and give the wrong average order value at the end. In order to handle this problem, before the iteration over the orders starts (before the for loop), we should initialize the count with zero. Then, if the order status is not cancelled, we need to increment the count by one. At the end, we have found the number of non-cancelled orders. 
 
-- In the current version, there is no docstring. So, we cannot get a hint about the functional requirements, the type of the orders parameter, and what type of values it includes. what type of values it includes, or the requirements of the function. This will make the function harder to understand and/or maintain within a team. 
+- In the current version, there are no docstring and comments. So, we cannot get a hint about the functional and non-functional requirements, and parameter. This will make the function harder to understand and/or maintain within a team. 
 
 - There is no validation applied on the 'orders' data which is given as the parameter. This parameter should be a list/tuple/set of dictionaries. 
 
@@ -69,7 +69,7 @@ float() function within a try-except block. This will ensure that the amount is 
 
 - Error tolerance is added: Risky operations like typecasting (e.g. float() and dict()) are wrapped with try-except blocks so that the bad data does not crash the function. 
 
-- Docstring is added: A docstring is added to the calculate_average_order_value() function in order to have some hints about the types of the parameters and return values, and get some functional information. This will improve the code readability, maintainability, and extensibility. 
+- A docstring and some comments are added: A docstring and some useful comments are added to the calculate_average_order_value() function in order to have some hints about the types of the parameters and return values, and get some functional information. This will improve the code readability, maintainability, and extensibility. 
 
 
 ### Corrected code
@@ -169,6 +169,8 @@ The current implementation relies on a single @ check, which introduces several 
 
     - False Positives: The strings "@pear", "me@" and "@@@@"  would be counted as valid emails, although they are not real email addresses.
 
+    - In the current version, there are no docstring and comments. So, we cannot get a hint about the functional and non-functional requirements, the type of the orders parameter, and what type of values it includes. This will make the function harder to understand and/or maintain within a team. 
+
     - Type Safety Checks on Each Email: Each email in emails should be a string. To ensure this, we need to add a type safety check in our current code for each email. 
 
     - Missing Character Checks: The current code does not check whether invalid characters such as whitespace, special characters, and punctuation marks exist in the email. Moreover, it does not check whether alphanumerical characters exist in the email. These checks should be added to the current implementation to ensure that we have valid emails and that only they are counted.  
@@ -212,7 +214,7 @@ ensure that the provided email is fully matching with the email format given in 
 after the valid structure . This guarantees that a string like "user@example.comextratexthere" is correctly identified as invalid.
 Moreover, I have called this function for each email in emails. If the email is valid, I have incremented the valid email counter by one. 
 
-- Docstrings are added to the count_valid_emails() and is_valid_email() function to improve the code readability, maintainability, and extensibility. 
+- Docstrings and some useful comments are added to the count_valid_emails() and is_valid_email() function to improve the code readability, maintainability, and extensibility. 
 
 
 ### Corrected code
@@ -329,14 +331,14 @@ Moreover, the unknowns may include extremely large emails iterable. iterable of 
 
 - Type conversion inside the loop: The float(v) conversion is used without handling potential exceptions. If v is not None but not convertible to float, it will crash.
 
-- Division by zero risk: If the values is empty or contains only None, total / count will raise ZeroDivisionError.
+- No docstring, type hints, or comments: There are no docstring, type hints, or comments. Adding them will improve the code readability, maintainability, and extensibility.  
 
-- Variable clarity: The variable name 'v' is not very descriptive; value is better. The total and count are okay to use but we could use valid_totalvalid_count
-and valid_total to make 
+- Division by zero risk: If the values is empty or contains only None, 'total / count' operation will raise ZeroDivisionError.
 
-total and count are okay, but could use valid_total and valid_count to make it clear they relate only to valid values.
+- Variable clarity: The variable name 'v' is not very descriptive; for example value is better. The total and count are okay to use but we could use valid_total and valid_count
+to make it clear that they relate only to valid values.
 
-- No docstring and type hint parts: Adding short docstring and type hint parts improves code readability, maintainability, and extensibility. 
+
 
 ## 2) Proposed Fixes / Improvements
 ### Summary of changes
@@ -350,7 +352,7 @@ total and count are okay, but could use valid_total and valid_count to make it c
 
 - Mathematical Filtering: Non-finite numbers (such as NaN or Infinity) are excluded via math.isfinite() to ensure the average remains a meaningful real number.
 
-- Docstring is added: Docstring is added to the average_valid_measurements() function to achieve better code readability, maintainability, and extensibility. 
+- A docstring and some comments are added: The docstring and some useful comments is added to the average_valid_measurements() function to achieve better code readability, maintainability, and extensibility. 
 
 ### Corrected code
 See `correct_task3.py`
