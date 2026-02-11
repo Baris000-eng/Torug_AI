@@ -53,7 +53,7 @@ def average_valid_measurements(values):
         20.166666666666668
     """
 
-    if validate_measurements(values) == False: 
+    if validate_measurements(values) == False:
          return 0.0
 
     valid_total = 0.0

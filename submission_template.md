@@ -49,6 +49,8 @@
 
 - There is no finiteness check on the status["amount"], we should check it so that we avoid infinite amounts or NaN (Not-a-Number) amounts given in the status dictionary. 
 
+- Variable clarity: The variable names total and count are okay but to achieve more clarity, we might want to use valid_total and valid_count respectively.
+
 
 ## 2) Proposed Fixes / Improvements
 ### Summary of changes
@@ -174,7 +176,7 @@ The current implementation relies on a single @ check, which introduces several 
 
     - Type Safety Checks on Each Email: Each email in emails should be a string. To ensure this, we need to add a type safety check in our current code for each email. 
 
-    - Missing Character Checks: The current code does not check whether invalid characters such as whitespace, special characters, and punctuation marks exist in the email. Moreover, it does not check whether alphanumerical characters exist in the email. These checks should be added to the current implementation to ensure that we have valid emails and that only they are counted.  
+    - Missing Character Checks: The current code does not check whether invalid characters such as whitespace, special characters, and punctuation marks exist in the email. Moreover, it does not check whether alphanumeric characters exist in the email. These checks should be added to the current implementation to ensure that we have valid emails and that only they are counted.  
 
     - Type Safety Risk of 'Emails' Parameter: The current implementation of the function does not validate the 'emails' parameter. It should be checked to ensure that it is not None and it is a non-empty iterable such as list, tuple, and set. These checks should be added in order to properly handle incompatible/malformed 'emails' parameter. 
     
@@ -188,9 +190,8 @@ The current implementation relies on a single @ check, which introduces several 
 - The simple 'if "@" in email' check is replaced with a robust regex-based (EMAIL_REGEX) check to ensure the email follows a 
 proper structure (user, domain, and top-level domain) with appropriate type and amount of characters in each part. 
 
-The email regex that is added: 
+The email format validation regex that is added: 
 
-# Email Validation Regex: Defines the pattern for a structurally sound email address.
 EMAIL_REGEX = re.compile(
     r"^[a-zA-Z0-9](?!.*\.{2})[a-zA-Z0-9._-]{3,33}[a-zA-Z0-9]"  # Username part with length restrictions and no consecutive dots 
     r"@"                                                       # The '@' symbol seperating the username and domain
@@ -206,12 +207,12 @@ What does this email regex check?:
 in a row are not allowed (e.g., myuser123....name@example.com is invalid).
 
 * Username length and content: "[a-zA-Z0-9._-]{3,33}" allows letters, numbers, and dots for the username, restricting the total 
-length between the first and last charachters to be between 3 and 33 characters, thus the total username length to be between
-5 and 35 charachters. 
+length between the first and last characters to be between 3 and 33 characters, thus the total username length to be between
+5 and 35 characters. 
 
-* Ends username with an alphanumeric character: "[a-zA-Z0-9]" ensures the username part ends with an alphanumerical character and does not end with a dot.
+* Ends username with an alphanumeric character: "[a-zA-Z0-9]" ensures the username part ends with an alphanumeric character and does not end with a dot.
 
-* Domain structure: "@[a-zA-Z0-9](?!.*\.{2})[a-zA-Z0-9.-]{0,28}[a-zA-Z0-9]\.[a-zA-Z]{2,20}$" ensures the email has an '@' symbol, followed by a domain name (like gmail) which includes alphanumerical characters, hyphens, or dots, and which is at least 2 charachters and at most 30 charachters long. This part of the regex also makes sure that the domain name can start and end with only alphanumerical charachters, and cannot contain consecutive dots. Moreover, this structure ensures that the email ends with a top-level domain (like 'com' or 'org'), which includes alphabetical charachters, and which is at least 2 characters and at most 20 charachters long. 
+* Domain structure: "@[a-zA-Z0-9](?!.*\.{2})[a-zA-Z0-9.-]{0,28}[a-zA-Z0-9]\.[a-zA-Z]{2,20}$" ensures the email has an '@' symbol, followed by a domain name (like gmail) which includes alphanumeric characters, hyphens, or dots, and which is at least 2 characters and at most 30 characters long. This part of the regex also makes sure that the domain name can start and end with only alphanumeric characters, and cannot contain consecutive dots. Moreover, this structure ensures that the email ends with a top-level domain (like 'com' or 'org'), which includes alphabetical characters, and which is at least 2 characters and at most 20 characters long. 
 
 - Some checks are added to ensure the input is actually a list, tuple, or set, and I handle empty/None inputs properly with 'if not emails'.
 
@@ -239,10 +240,10 @@ I would focus on the following test areas/scenarios:
 
   Malformed Email Structure: I would test different email structures that violate the EMAIL_REGEX to ensure they are correctly ignored.
 
-    * Examples: Missing @, missing domain, missing top-level domain, an email with a username less than 5 or more than 35 charachters, 
+    * Examples: Missing @, missing domain, missing top-level domain, an email with a username less than 5 or more than 35 characters, 
     an email with a username ending with dot, email with a username containing consecutive dots, email with a domain name containing 1 
-    charachter or more than 30 charachters, an email with a top-level domain containing 1 charachter or more than 20 charachter, an email 
-    containing alphanumerical charachters in its username but not in its domain name or extension, and so forth.
+    charachter or more than 30 characters, an email with a top-level domain containing 1 charachter or more than 20 charachter, an email 
+    containing alphanumeric characters in its username but not in its domain name or extension, and so forth.
 
 
  Username and Domain Constraints: I would verify the length restrictions and character constraints I set in the regex.
@@ -293,7 +294,7 @@ counts them as valid simply because they contain an '@' symbol.
 
  > Ends with alphanumeric: The username must end with a letter or number, not a dot.
 
- > Domain Structure: After the username ends, an '@' symbol should come. Then, a valid '@' symbol must be followed by a domain name, and then a top-level domain (such as 'com', and 'org'). The domain name is set to have at least 2 and at most 30 charachters, while the top-level domain name is set to have at least 2 and at most 20 charachters.  The domain name can start and end with only alphanumerical charachters, and cannot contain consecutive dots. Moreover, the top-level domain name can only include alphabetical charachters, while the domain name can include alphanumerical charachters, hypens, and dots. 
+ > Domain Structure: After the username ends, an '@' symbol should come. Then, a valid '@' symbol must be followed by a domain name, and then a top-level domain (such as 'com', and 'org'). The domain name is set to have at least 2 and at most 30 characters, while the top-level domain name is set to have at least 2 and at most 20 characters.  The domain name can start and end with only alphanumeric characters, and cannot contain consecutive dots. Moreover, the top-level domain name can only include alphabetical characters, while the domain name can include alphanumeric characters, hypens, and dots. 
 
 > Error Handling: The function (specifically is_valid_email(email)) verifies that each item is a string (isinstance(email, str)) before validation, 
 > ensuring non-string items within the input list are safely ignored and the function does not crash.
@@ -338,6 +339,7 @@ Moreover, the unknowns may include extremely large 'emails' parameter. We may us
 - Division by zero risk: If the values is empty or contains only None, 'total / count' operation will raise ZeroDivisionError.
 
 - Variable clarity: The variable name 'v' is not very descriptive; for example the name 'value' is better for more clarity. 
+The variable names total and count are okay but to achieve more clarity, we might want to use valid_total and valid_count respectively.
 
 
 ## 2) Proposed Fixes / Improvements

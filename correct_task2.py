@@ -12,7 +12,7 @@ Validation Rules:
 - No consecutive dots (..) allowed.
 - Domain and top-level domain parts should be valid.
 - Length restrictions applied to local part and domain. Each username part must
-be between 5 and 35 charachters, the domain part must be between 2 and 30 characters, 
+be between 5 and 35 characters, the domain part must be between 2 and 30 characters, 
 and the top-level domain must be between 2 and 20 characters. 
 """
 
@@ -77,7 +77,7 @@ def count_valid_emails(emails):
         > count_valid_emails(email_list)
         2
     """
-    if validate_emails(emails) == False: 
+    if validate_emails(emails) == False:
         return 0
 
     valid_email_count = 0
