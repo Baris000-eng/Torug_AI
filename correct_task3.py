@@ -76,4 +76,4 @@ def average_valid_measurements(values):
     return total / valid_count
 
 
-print(average_valid_measurements(["10", "10.5", "20.5"]))
+# print(average_valid_measurements(["10", "10.5", "20.5"]))

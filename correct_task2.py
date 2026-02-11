@@ -47,7 +47,8 @@ def validate_emails(emails):
     the emails input is a non-empty/non-None iterable (list, tuple, set)"""
     # Input Validation: Check if input is empty, None, or not an allowed iterable type.
     if not emails or not isinstance(emails, (list, tuple, set)):
-        return 0
+        return False 
+    return True 
 
 def count_valid_emails(emails):
     """
@@ -71,7 +72,8 @@ def count_valid_emails(emails):
         > count_valid_emails(email_list)
         2
     """
-    validate_emails(emails)
+    if validate_emails(emails) == False: 
+        return 0
 
     valid_email_count = 0
 
