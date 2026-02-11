@@ -12,7 +12,11 @@ def is_valid_orders_data(orders):
     return True 
 
 def is_valid_order(order) -> bool:
-    """Checks if an order has the required structure and is not cancelled."""
+    """Checks if an order has the required structure and is not cancelled.
+    An order is considered valid if: 
+    - It can be cast to a dictionary.
+    - It contains the keys 'status' and 'amount'.
+    - The status is not 'cancelled' in a case-insensitive manner (e.g., 'CANCELLED', 'cANcELLeD', 'Cancelled', etc.)."""
     # Type Checking: Attempt to convert order to a dictionary (e.g., if it's a tuple of tuples).
     try:
         order = dict(order)

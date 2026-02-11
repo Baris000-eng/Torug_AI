@@ -13,7 +13,7 @@ def is_valid_measurements_data(values):
     
 def is_valid_measurement(value):
     """It validates a single measurement. If the measured value is valid, it returns 
-    True; otherwise, it returns False. A valid measurement is a value 
+    True; otherwise, it returns False. A valid measurement is a non-None value 
     that can be converted to a finite float (not Infinity (Inf) of Not-a-Number (NaN)) 
     and is not a boolean (since bools are subclasses of int in Python)."""
     # Validation: Ensure value is not None and not a boolean (bools are subclasses of int).

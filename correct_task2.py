@@ -41,7 +41,7 @@ def is_valid_email(email: str) -> bool:
         email: The string to be validated.
 
     Returns:
-        True if the email format is valid, False otherwise (or if input is not a string).
+        True if the email format is valid and the email is a string, False otherwise.
 
     Example:
         > is_valid_email("myuser@example.com")
