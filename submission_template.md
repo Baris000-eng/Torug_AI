@@ -49,7 +49,7 @@
 
 - There is no finiteness check on the status["amount"], we should check it so that we avoid infinite amounts or NaN (Not-a-Number) amounts given in the status dictionary. 
 
-- Variable clarity: The variable names total and count are okay but to achieve more clarity, we might want to use valid_total and valid_count respectively.
+- Variable clarity: The variable names total and count are okay; however, to achieve more clarity and consistency, we might want to use valid_total and valid_count respectively.
 
 
 ## 2) Proposed Fixes / Improvements
@@ -339,7 +339,7 @@ Moreover, the unknowns may include extremely large 'emails' parameter. We may us
 - Division by zero risk: If the values is empty or contains only None, 'total / count' operation will raise ZeroDivisionError.
 
 - Variable clarity: The variable name 'v' is not very descriptive; for example the name 'value' is better for more clarity. 
-The variable names total and count are okay but to achieve more clarity, we might want to use valid_total and valid_count respectively.
+The variable names total and count are okay; but, to achieve more clarity and consistency, we might want to use valid_total and valid_count respectively.
 
 
 ## 2) Proposed Fixes / Improvements
