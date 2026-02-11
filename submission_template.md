@@ -190,7 +190,7 @@ proper structure (user, domain, and top-level domain) with appropriate type and 
 
 The email regex that is added: 
 
-EMAIL_REGEX = re.compile(r"^[a-z0-9](?!.*\.{2})[a-z0-9.]{3,33}[a-z0-9]@[a-zA-Z0-9.-]{2,30}+\.[a-zA-Z]{2,20}$")
+EMAIL_REGEX = re.compile(r"^[a-zA-Z0-9](?!.*\.{2})[a-zA-Z0-9._-]{3,33}[a-zA-Z0-9]@[a-zA-Z0-9.-]{2,30}\.[a-zA-Z]{2,20}$")
 
 What does this email regex check?: 
 
@@ -250,7 +250,7 @@ I would focus on the following test areas/scenarios:
 
     * Examples: user..name@example.com .
 
- Extra Text/Whitespace ( fullmatchverification): I would test strings that contain a valid email pattern but have additional text or spaces around it to confirm fullmatch() rejects them.
+ Extra Text/Whitespace (full match verification): I would test strings that contain a valid email pattern but have additional text or spaces around it to confirm fullmatch() rejects them.
 
     * Examples: "user@example.comextra_text", " user@example.com".
 

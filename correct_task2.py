@@ -16,7 +16,7 @@ be between 5 and 35 charachters, the domain part must be between 2 and 30 charac
 and the top-level domain must be between 2 and 20 characters. 
 """
 
-# Validation Regex: Defines the pattern for a structurally sound email address.
+# Email Validation Regex: Defines the pattern for a structurally sound email address.
 EMAIL_REGEX = re.compile(r"^[a-zA-Z0-9](?!.*\.{2})[a-zA-Z0-9._-]{3,33}[a-zA-Z0-9]@[a-zA-Z0-9.-]{2,30}\.[a-zA-Z]{2,20}$")
 
 def is_valid_email(email: str) -> bool:
@@ -90,4 +90,5 @@ def count_valid_emails(emails):
 
 
 # print(is_valid_email("bariskaplan2000@gmail.com"))
-# print(is_valid_email("@123.com"))
+# print(is_valid_email("bkaplan18@ku.edu.tr"))
+# print(is_valid_email("@@@123.com"))
