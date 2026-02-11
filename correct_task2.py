@@ -78,7 +78,7 @@ def count_valid_emails(emails):
     valid_email_count = 0
 
     # Iteration: Loop through the provided collection of emails.
-    for email in list(emails):
+    for email in emails:
         # Content Validation: Check if the current item is a valid email string.
         if is_valid_email(email):
             valid_email_count += 1
