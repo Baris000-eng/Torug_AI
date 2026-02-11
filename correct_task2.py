@@ -17,7 +17,12 @@ and the top-level domain must be between 2 and 20 characters.
 """
 
 # Email Validation Regex: Defines the pattern for a structurally sound email address.
-EMAIL_REGEX = re.compile(r"^[a-zA-Z0-9](?!.*\.{2})[a-zA-Z0-9._-]{3,33}[a-zA-Z0-9]@[a-zA-Z0-9.-]{2,30}\.[a-zA-Z]{2,20}$")
+EMAIL_REGEX = re.compile(
+    r"^[a-zA-Z0-9](?!.*\.{2})[a-zA-Z0-9._-]{3,33}[a-zA-Z0-9]"  # Username part with length restrictions and no consecutive dots 
+    r"@"                                                       # The '@' symbol seperating the username and domain
+    r"[a-zA-Z0-9](?!.*\.{2})[a-zA-Z0-9.-]{0,28}[a-zA-Z0-9]"               # Domain part with length restrictions 
+    r"\.[a-zA-Z]{2,20}$"                                       # Extension part (Top-Level Domain (TLD)) with length restrictions
+, re.VERBOSE)
 
 def is_valid_email(email: str) -> bool:
     """
