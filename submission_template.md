@@ -199,13 +199,14 @@ What does this email regex check?:
 * No consecutive dots: (?!.*\.{2}) is a negative lookahead which ensures that two or more dots 
 in a row are not allowed (e.g., myuser123....name@example.com is invalid).
 
-* Username length and content: [a-zA-Z0-9.]{3,33} allows letters, numbers, and dots for the username, restricting the total 
+* Username length and content: [a-zA-Z0-9._-]{3,33} allows letters, numbers, and dots for the username, restricting the total 
 length between the first and last charachters to be between 3 and 33 characters, thus the total username length to be between
 5 and 35 charachters. 
 
 * Ends username with an alphanumeric character: [a-zA-Z0-9] ensures the username part ends with an alphanumerical character and does not end with a dot.
 
-* Domain structure: '@[a-zA-Z0-9.-]{2,30}\.[a-zA-Z]{2,20}$' ensures the email has an '@' symbol, followed by a domain name which includes alphanumerical characters, hyphens, or dots, which is at least 2 charachters and at most 30 charachters long, and ends with a top-level domain (like 'com' or 'org'), which includes alphabetical charachters and which is at least 2 characters and at most 20 charachters long.
+* Domain structure: '@[a-zA-Z0-9.-]{2,30}\.[a-zA-Z]{2,20}$' ensures the email has an '@' symbol, followed by a domain name (like gmail) which includes alphanumerical characters, hyphens, or dots, 
+which is at least 2 charachters and at most 30 charachters long, and ends with a top-level domain (like 'com' or 'org'), which includes alphabetical charachters and which is at least 2 characters and at most 20 charachters long.
 
 - Some checks are added to ensure the input is actually a list, tuple, or set, and I handle empty/None inputs properly with 'if not emails'.
 
@@ -231,7 +232,7 @@ If you were to test this function, what areas or scenarios would you focus on, a
 
 I would focus on the following test areas/scenarios: 
 
- Valid Email Formats: I would test standard, valid emails to ensure the regex pattern allows them.
+ Valid Email Formats: I would test standard, valid emails to ensure that the regex pattern allows them.
 
     * Examples: testuser@example.com , user.name+tag@sub.domain.co.uk.
 
