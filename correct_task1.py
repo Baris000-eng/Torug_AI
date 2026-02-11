@@ -51,13 +51,13 @@ def is_valid_order(order) -> bool:
     # Return True if the order parameter is valid, False otherwise. 
 
     try:
-        order = dict(order)
+        order_dict = dict(order)
     except:
         # Skip if the item cannot be converted to a dictionary.
         return False 
 
     # Structure Checking: Ensure required keys 'status' and 'amount' exist.
-    if "status" in order and "amount" in order:
+    if "status" in order_dict and "amount" in order_dict:
             
         # Data Cleaning: Normalize status to lowercase to handle 'Cancelled', 'CANCELLED', etc.
         try:
