@@ -15,6 +15,8 @@ Validation Rules:
 be between 5 and 35 charachters, the domain part must be between 2 and 30 characters, 
 and the top-level domain must be between 2 and 20 characters. 
 """
+
+# Validation Regex: Defines the pattern for a structurally sound email address.
 EMAIL_REGEX = re.compile(r"^[a-z0-9](?!.*\.{2})[a-z0-9.]{3,33}[a-z0-9]@[a-zA-Z0-9.-]{2,30}+\.[a-zA-Z]{2,20}$")
 
 def is_valid_email(email: str) -> bool:
@@ -34,6 +36,9 @@ def is_valid_email(email: str) -> bool:
         > is_valid_email("invalid-email-example")
         False
     """
+    # Input Type Validation: Ensure input is a string before regex matching.
+    # Pattern Matching: Use fullmatch to check if the entire string matches the pattern.
+
     return isinstance(email, str) and bool(EMAIL_REGEX.fullmatch(email))
 
 
@@ -59,15 +64,19 @@ def count_valid_emails(emails):
         > count_valid_emails(email_list)
         2
     """
+    # Input Validation: Check if input is empty, None, or not an allowed iterable type.
     if not emails or not isinstance(emails, (list, tuple, set)):
         return 0
 
     valid_email_count = 0
 
+    # Iteration: Loop through the provided collection of emails.
     for email in list(emails):
+        # Content Validation: Check if the current item is a valid email string.
         if is_valid_email(email):
             valid_email_count += 1
 
+    # Result: Return the total count of valid emails found.
     return valid_email_count
 
 

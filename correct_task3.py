@@ -29,17 +29,23 @@ def average_valid_measurements(values):
         > average_valid_measurements(data)
         20.166666666666668
     """
+
+    # Validation: Check if input is empty, None, or not an allowed iterable type.
     if not values or (not isinstance(values, (list, tuple, set, range))):
         return 0.0
 
     total = 0.0
     valid_count = 0
 
+    # Iteration: Loop through each item in the iterable.
     for v in values:
+        # Validation: Ensure value is not None and not a boolean (bools are subclasses of int).
         if v is not None and (not (isinstance(v, bool))):
             try:
+                # Conversion: Attempt to cast the value to a float.
                 num = float(v)
                 
+                # Safety Check on the Value: Ensure the number is finite (exclude NaN or Infinity).
                 if math.isfinite(num):
                     total += num
                     valid_count += 1
@@ -49,10 +55,11 @@ def average_valid_measurements(values):
             except:
                 continue
         
-    # To avoid division by zero, return 0.0 if there are no valid measurements.
+    # ZeroDivisionError Prevention: Avoid divide-by-zero error if no valid measurements were found.
     if valid_count == 0:
         return 0.0
 
+    # Calculation: Return the arithmetic mean of valid measurements. 
     return total / valid_count
 
 

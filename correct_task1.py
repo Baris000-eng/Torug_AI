@@ -36,6 +36,7 @@ def calculate_average_order_value(orders):
         > calculate_average_order_value(orders)
         75.0
     """
+    # Validation: Check if orders is empty, None, or not an allowed iterable type.
     if not orders or (not isinstance(orders, (list, tuple, set))):
         return 0.0
 
@@ -43,28 +44,38 @@ def calculate_average_order_value(orders):
     valid_count = 0
 
     for order in orders:
+        # Type Checking: Attempt to convert order to a dictionary (e.g., if it's a tuple of tuples).
         try:
             order = dict(order)
         except:
-            continue
+            continue # Skip if the item cannot be converted to a dictionary.
 
+        # Structure Checking: Ensure required keys 'status' and 'amount' exist.
         if "status" in order and "amount" in order:
+            
+            # Data Cleaning: Normalize status to lowercase to handle 'Cancelled', 'CANCELLED', etc.
             try:
                 order_status = str(order["status"]).lower()
             except:
-                continue
+                continue # Skip if status cannot be converted to a string.
+            
+            # Filtering: Skip orders that were cancelled or canceled (US/UK spelling).
             if order_status not in ["cancelled", "canceled"]:
+                
+                # Type Conversion & Validation: Attempt to convert amount to float.
                 try:
                     amount = float(order["amount"])
                     
+                    # Safety Check: Ensure the number is finite (exclude NaN or Infinity).
                     if math.isfinite(amount):
                         total += amount
                         valid_count += 1
                 except:
-                    continue
-
-    # To avoid division by zero, return 0.0 if there are no valid orders.
+                    continue # Skip if amount cannot be converted to a float.
+        
+    # Error Prevention: Avoid division-by-zero if no valid orders were found.
     if valid_count == 0: 
         return 0.0 
 
+    # Calculation: Compute and return the arithmetic mean.
     return total / valid_count
