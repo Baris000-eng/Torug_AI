@@ -90,10 +90,12 @@ def is_valid_order_amount(amount) -> bool:
        False
        > is_valid_order_amount(float("inf"))
        False"""
-    # Type Conversion & Validation: Attempt to convert amount to float.
+    # Type Validation and Conversion: Ensure that the amount is not None and not a boolean 
+    # (bools are subclasses of int in Python). Attempt to convert the amount to float. 
     if amount is not None and (not isinstance(amount, bool)):
         try: 
             value = float(amount)
+            
             # Safety Check: Ensure the number is finite (exclude NaN (Not-a-Number) or infinity).
             if math.isfinite(value):
                 return True

@@ -50,11 +50,11 @@ def is_valid_measurement(value) -> bool:
       False
       > is_valid_measurement("")
       False"""
-    # Validation: Ensure value is not None and not a boolean (bools are subclasses of int).
+    # Type Validation: Ensure that the value is not None and is not a boolean (bools are subclasses of int).
     # Return False if the measurement is invalid, True otherwise. 
     if value is not None and (not (isinstance(value, bool))):
         try: 
-            # Conversion: Attempt to cast the value to a float.
+            # Type Conversion: Attempt to cast the value to a float.
             num = float(value)
 
             # Safety Check on the Value: Ensure the number is finite (exclude NaN (Not-a-Number) or infinity).
