@@ -82,6 +82,9 @@ def count_valid_emails(emails):
         # Content Validation: Check if the current item is a valid email string.
         if is_valid_email(email):
             valid_email_count += 1
+        else:
+            # Skip invalid email entries (non-string, incompatible types, or malformed strings)
+            continue
 
     # Result: Return the total count of valid emails found.
     return valid_email_count
