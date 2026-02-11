@@ -61,7 +61,7 @@ def is_valid_order(order) -> bool:
             
         # Data Cleaning: Normalize status to lowercase to handle 'Cancelled', 'CANCELLED', etc.
         try:
-            order_status = str(order["status"]).lower()
+            order_status = str(order_dict["status"]).lower()
         except:
             # Skip if status cannot be converted to a string.
             return False 
@@ -88,7 +88,8 @@ def is_valid_order_amount(amount) -> bool:
        True
        > is_valid_order_amount("helloworld")
        False
-       > is_valid_order_amount(float("inf"))"""
+       > is_valid_order_amount(float("inf"))
+       False"""
     # Type Conversion & Validation: Attempt to convert amount to float.
     if amount is not None and (not isinstance(amount, bool)):
         try: 
@@ -96,7 +97,7 @@ def is_valid_order_amount(amount) -> bool:
             # Safety Check: Ensure the number is finite (exclude NaN (Not-a-Number) or infinity).
             if math.isfinite(value):
                 return True
-        except: 
+        except:
             return False 
     
     return False 
