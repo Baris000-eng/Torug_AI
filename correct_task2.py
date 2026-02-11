@@ -24,21 +24,31 @@ EMAIL_REGEX = re.compile(
     r"\.[a-zA-Z]{2,20}$"                                       # Extension part (Top-Level Domain (TLD)) with length restrictions
 , re.VERBOSE)
 
-def is_valid_emails_data(emails): 
-    """It validates a collection of email addresses. It ensures that 
+def is_valid_emails_data(emails) -> bool: 
+    """ Validates a collection of email addresses. It ensures that 
     the emails input is a non-empty and non-None iterable (list, tuple, set).
+
     Args:
         emails: An iterable containing email addresses. 
     Returns: 
-        True if the emails parameter is a non-empty and non-None iterable of the correct type, False otherwise."""
+        True if the emails parameter is a non-empty and non-None iterable of the 
+        correct type, False otherwise.
+    Example: 
+        > is_valid_emails_data([])
+        False
+        > is_valid_emails_data(["mytest@gmail.com", "anothertest@gmail.com"])
+        True
+    """
     # Input Validation: Check if input is empty, None, or not an allowed iterable type.
+    # Return false if the parameter 'emails' is invalid, True otherwise. 
+    # Emails is considered invalid if it is empty, None, or not an iterable of type 
+    # list, tuple, or set. 
     if not emails or not isinstance(emails, (list, tuple, set)):
         return False 
     return True 
 
 def is_valid_email(email: str) -> bool:
-    """
-    Checks if a string is a valid email address based on predefined regex rules.
+    """ Checks if a string is a valid email address based on predefined regex rules.
 
     Args:
         email: The string to be validated.
@@ -55,6 +65,8 @@ def is_valid_email(email: str) -> bool:
     """
     # Input Type Validation: Ensure input is a string before regex matching.
     # Pattern Matching: Use fullmatch to check if the entire string matches the pattern.
+    # Returns True if the email is a string and fully matches the regex pattern, False 
+    # otherwise.
 
     return isinstance(email, str) and bool(EMAIL_REGEX.fullmatch(email))
 

@@ -3,14 +3,25 @@
 
 import math
 
-def is_valid_orders_data(orders): 
-    """It validates a collection of orders. It ensures that the orders input is a non-empty and non-None iterable (list, tuple, set).
+def is_valid_orders_data(orders) -> bool: 
+    """Validates a collection of orders. It ensures that the orders input is a 
+    non-empty and non-None iterable (list, tuple, set).
     Args: 
         orders: An iterable containing order data.
     Returns: 
-        True if the orders parameter is a non-empty and non-None iterable of the correct type, False otherwise."""
+        True if the orders parameter is a non-empty and non-None iterable of the 
+        correct type, False otherwise.
+    Example: 
+        > is_valid_orders_data("this_is_not_an_iterable")
+        False
+        > is_valid_orders_data([2, 3, 33, 3994, 55, 0.5])
+        True
+        > is_valid_orders_data([5.59, 10.41, 20.25, 17.75, 40.39, 44.61])
+        True
+        > is_valid_orders_data([])
+        False"""
     # Validation: Check if input is empty, None, or not an allowed iterable type.
-    # Return False if the parameter is invalid, True otherwise.
+    # Return False if the 'orders' parameter is invalid, True otherwise.
     if not orders or (not isinstance(orders, (list, tuple, set))):
         return False 
     return True 
@@ -18,14 +29,27 @@ def is_valid_orders_data(orders):
 def is_valid_order(order) -> bool:
     """Checks if an order has the required structure and is not cancelled.
     An order is considered valid if: 
+    - It is not None or empty. 
     - It can be cast to a dictionary.
     - It contains the keys 'status' and 'amount'.
-    - The order status is not 'cancelled' in a case-insensitive manner (e.g., 'CANCELLED', 'cANcELLeD', 'Cancelled', etc.).
+    - The order status is not 'cancelled' in a case-insensitive manner 
+    (e.g., 'CANCELLED', 'cANcELLeD', 'Cancelled', etc.).
     Args: 
         order: The order to be validated, which has ideally a dictionary-like structure.
     Returns:
-        True if the order is valid, False otherwise."""
+        True if the order is valid, False otherwise.
+    Example: 
+        > is_valid_order("my_order")
+        False
+        > is_valid_order({"status": "delivered", "amount": 330.0})
+        True
+        > is_valid_order({"status": "CANCELLED", "amount": 90})
+        False
+        > is_valid_order({"status": "shipped", "amount": 125.5})
+        True"""
     # Type Checking: Attempt to convert order to a dictionary structure.
+    # Return True if the order parameter is valid, False otherwise. 
+
     try:
         order = dict(order)
     except:
@@ -49,15 +73,34 @@ def is_valid_order(order) -> bool:
     return False 
 
 def is_valid_order_amount(amount) -> bool: 
-    """Checks if the order amount is a valid, finite number."""
+    """Checks if the order amount is a valid, finite number. An order amount is considered valid 
+    if it is a non-None and non-empty value that can be converted to a finite float (not Not-a-Number (NaN) or 
+    Infinity (Inf)) and is not a boolean (since bools are subclasses of int in Python).
+    > Args: 
+       amount: The order amount to be validated.
+    > Returns: 
+       True if the order amount is a valid, finite number (int, float, or numeric string), 
+       False otherwise.
+    > Example: 
+       > is_valid_order_amount(1000)
+       True
+       > is_valid_order_amount(444.45)
+       True
+       > is_valid_order_amount("helloworld")
+       False
+       > is_valid_order_amount(float("inf"))"""
     # Type Conversion & Validation: Attempt to convert amount to float.
-    try: 
-        num = float(amount)
-        # Safety Check: Ensure the number is finite (exclude NaN (Not-a-Number) or Infinity). 
-        return math.isfinite(num) 
-    except: 
-        # Return False if the amount cannot be converted to a float. 
-        return False 
+    if amount is not None and (not isinstance(amount, bool)):
+        try: 
+            value = float(amount)
+            # Safety Check: Ensure the number is finite (exclude NaN (Not-a-Number) or infinity).
+            if math.isfinite(value):
+                return True
+        except: 
+            return False 
+    
+    return False 
+
 
 def calculate_average_order_value(orders):
     """
