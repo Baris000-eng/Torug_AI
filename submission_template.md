@@ -195,7 +195,7 @@ The email format validation regex that is added:
 EMAIL_REGEX = re.compile(
     r"^[a-zA-Z0-9](?!.*\.{2})[a-zA-Z0-9._-]{3,33}[a-zA-Z0-9]"  # Username part with length restrictions and no consecutive dots 
     r"@"                                                       # The '@' symbol seperating the username and domain
-    r"[a-zA-Z0-9](?!.*\.{2})[a-zA-Z0-9.-]{0,28}[a-zA-Z0-9]"    # Domain part with length restrictions 
+    r"[a-zA-Z0-9](?!.*\.{2})[a-zA-Z0-9.-]{0,28}[a-zA-Z0-9]"    # Domain part with length restrictions and no consecutive dots 
     r"\.[a-zA-Z]{2,20}$"                                       # Extension part (Top-Level Domain (TLD)) with length restrictions
 , re.VERBOSE)
 
