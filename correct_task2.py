@@ -42,6 +42,13 @@ def is_valid_email(email: str) -> bool:
     return isinstance(email, str) and bool(EMAIL_REGEX.fullmatch(email))
 
 
+def validate_emails(emails): 
+    """It validates a collection of email addresses. It ensures that 
+    the emails input is a non-empty/non-None iterable (list, tuple, set)"""
+    # Input Validation: Check if input is empty, None, or not an allowed iterable type.
+    if not emails or not isinstance(emails, (list, tuple, set)):
+        return 0
+
 def count_valid_emails(emails):
     """
     Counts the number of valid email addresses within a collection.
@@ -64,9 +71,7 @@ def count_valid_emails(emails):
         > count_valid_emails(email_list)
         2
     """
-    # Input Validation: Check if input is empty, None, or not an allowed iterable type.
-    if not emails or not isinstance(emails, (list, tuple, set)):
-        return 0
+    validate_emails(emails)
 
     valid_email_count = 0
 

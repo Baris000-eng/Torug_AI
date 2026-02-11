@@ -2,6 +2,28 @@
 # Do not modify `task3.py`.
 import math 
 
+def validate_measurements(values): 
+    """It validates a collection of measurement values. It ensures that the values input is a non-empty/non-None iterable (list, tuple, set, range)"""
+    # Validation: Check if input is empty, None, or not an allowed iterable type.
+    if not values or (not isinstance(values, (list, tuple, set, range))):
+        return 0.0
+    
+def validate_measurement(value):
+    """It validates a single measurement"""
+    # Validation: Ensure value is not None and not a boolean (bools are subclasses of int).
+    if value is not None and (not (isinstance(value, bool))):
+        try: 
+            # Conversion: Attempt to cast the value to a float.
+            num = float(value)
+
+            # Safety Check on the Value: Ensure the number is finite (exclude NaN (Not-a-Number) or infinity).
+            if math.isfinite(num): 
+                return True
+        except: 
+            return False 
+    
+    return False 
+
 def average_valid_measurements(values):
     """
     Calculates the arithmetic mean of valid, finite numerical measurements.
@@ -30,31 +52,20 @@ def average_valid_measurements(values):
         20.166666666666668
     """
 
-    # Validation: Check if input is empty, None, or not an allowed iterable type.
-    if not values or (not isinstance(values, (list, tuple, set, range))):
-        return 0.0
+    validate_measurements(values)
 
     total = 0.0
     valid_count = 0
 
     # Iteration: Loop through each item in the iterable.
-    for v in values:
-        # Validation: Ensure value is not None and not a boolean (bools are subclasses of int).
-        if v is not None and (not (isinstance(v, bool))):
-            try:
-                # Conversion: Attempt to cast the value to a float.
-                num = float(v)
-                
-                # Safety Check on the Value: Ensure the number is finite (exclude NaN or Infinity).
-                if math.isfinite(num):
-                    total += num
+    for value in values:
+        if validate_measurement(value):
+                    total += value
                     valid_count += 1
-                else:
-                    continue
+        else:
+             # Skip invalid measurement values.
+             continue 
                     
-            except:
-                continue
-        
     # ZeroDivisionError Prevention: Avoid divide-by-zero error if no valid measurements were found.
     if valid_count == 0:
         return 0.0

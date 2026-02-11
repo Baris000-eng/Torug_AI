@@ -3,6 +3,48 @@
 
 import math
 
+def validate_orders(orders): 
+    """It validates a collection of orders. It ensures that the orders input is a non-Empty/non-None iterable (list, tuple, set)"""
+    # Validation: Check if input is empty, None, or not an allowed iterable type."""
+    if not orders or (not isinstance(orders, (list, tuple, set))):
+        return 0.0
+
+def is_valid_order(order) -> bool:
+    """Checks if an order has the required structure and is not cancelled."""
+    # Type Checking: Attempt to convert order to a dictionary (e.g., if it's a tuple of tuples).
+    try:
+        order = dict(order)
+    except:
+        # Skip if the item cannot be converted to a dictionary.
+        return False 
+
+    # Structure Checking: Ensure required keys 'status' and 'amount' exist.
+    if "status" in order and "amount" in order:
+            
+        # Data Cleaning: Normalize status to lowercase to handle 'Cancelled', 'CANCELLED', etc.
+        try:
+            order_status = str(order["status"]).lower()
+        except:
+            # Skip if status cannot be converted to a string.
+            return False 
+            
+        # Filtering: Skip orders that were cancelled or canceled (UK/US spelling).
+        return order_status not in ["cancelled", "canceled"]
+    
+    # If the order does not have the required keys, it is considered invalid.
+    return False 
+
+def is_valid_order_amount(amount) -> bool: 
+    """Checks if the order amount is a valid, finite number."""
+    # Type Conversion & Validation: Attempt to convert amount to float.
+    try: 
+        num = float(amount)
+        # Safety Check: Ensure the number is finite (exclude NaN (Not-a-Number) or Infinity). 
+        return math.isfinite(num) 
+    except: 
+        # Return False if the amount cannot be converted to a float. 
+        return False 
+
 def calculate_average_order_value(orders):
     """
     Calculates the average monetary value of valid, non-cancelled orders.
@@ -36,42 +78,24 @@ def calculate_average_order_value(orders):
         > calculate_average_order_value(orders)
         75.0
     """
-    # Validation: Check if orders is empty, None, or not an allowed iterable type.
-    if not orders or (not isinstance(orders, (list, tuple, set))):
-        return 0.0
+    validate_orders(orders)
 
     total = 0.0
     valid_count = 0
 
     for order in orders:
-        # Type Checking: Attempt to convert order to a dictionary (e.g., if it's a tuple of tuples).
-        try:
-            order = dict(order)
-        except:
-            continue # Skip if the item cannot be converted to a dictionary.
-
-        # Structure Checking: Ensure required keys 'status' and 'amount' exist.
-        if "status" in order and "amount" in order:
-            
-            # Data Cleaning: Normalize status to lowercase to handle 'Cancelled', 'CANCELLED', etc.
-            try:
-                order_status = str(order["status"]).lower()
-            except:
-                continue # Skip if status cannot be converted to a string.
-            
-            # Filtering: Skip orders that were cancelled or canceled (US/UK spelling).
-            if order_status not in ["cancelled", "canceled"]:
-                
-                # Type Conversion & Validation: Attempt to convert amount to float.
-                try:
-                    amount = float(order["amount"])
-                    
-                    # Safety Check: Ensure the number is finite (exclude NaN or Infinity).
-                    if math.isfinite(amount):
+        if is_valid_order(order): 
+                amount = order["amount"]
+                if is_valid_order_amount(amount):
                         total += amount
                         valid_count += 1
-                except:
-                    continue # Skip if amount cannot be converted to a float.
+                else:
+                    # Amount is invalid, so skip this order. 
+                    continue 
+        
+        else:
+            # Skip invalid orders
+            continue
         
     # Error Prevention: Avoid division-by-zero if no valid orders were found.
     if valid_count == 0: 

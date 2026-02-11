@@ -70,6 +70,8 @@ float() function within a try-except block. This will ensure that the amount is 
 
 - A docstring and some comments are added: A docstring and some useful comments are added to the calculate_average_order_value() function in order to have some hints about the types of the parameters and return values, and get some functional information. This will improve the code readability, maintainability, and extensibility. 
 
+- The 'validate_orders()', 'is_valid_order()', and 'is_valid_order_amount()' helper functions are added: The helper functions named 'validate_orders()', 'is_valid_order()', and 'is_valid_order_amount()' are added therefore the code becomes more readable, maintainable, and developable. 
+
 
 ### Corrected code
 See `correct_task1.py`
@@ -352,6 +354,8 @@ to make it clear that they relate only to valid values.
 - Mathematical Filtering: Non-finite numbers (such as NaN or Infinity) are excluded via math.isfinite() to ensure the average remains a meaningful real number.
 
 - A docstring and some comments are added: The docstring and some useful comments is added to the average_valid_measurements() function to achieve better code readability, maintainability, and extensibility. 
+
+- The validate_measurements() and validate_measurement() helper functions are added: The helper functions named 'validate_measurements()' and 'validate_measurement()' are added so that the code becomes more readable, manageable, and improvable.
 
 ### Corrected code
 See `correct_task3.py`
