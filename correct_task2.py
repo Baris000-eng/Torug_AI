@@ -89,5 +89,5 @@ def count_valid_emails(emails):
 
 
 
-print(is_valid_email("bariskaplan2000@gmail.com"))
-print(is_valid_email("@123.com"))
+# print(is_valid_email("bariskaplan2000@gmail.com"))
+# print(is_valid_email("@123.com"))
