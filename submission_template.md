@@ -201,7 +201,7 @@ EMAIL_REGEX = re.compile(
 
 What does this email structure validation regex check?: 
 
-* In this regex, 're.VERBOSE' flag/argument lets you write multi-line and readable regular expressions by ignoring unescaped whitespace characters and allowing comments. It only ignores whitespace characters meant for formatting the pattern, not whitespace characters that are part of the actual regex syntax.
+* In this regex, 're.VERBOSE' flag/argument lets you write multi-line and readable regular expressions by ignoring unescaped whitespace characters, which are directly included in the text, and allowing comments. It only ignores the whitespace characters meant for formatting the regex pattern, not the whitespace characters that are part of the actual regex syntax.
 
 * Starts with alphanumeric character: "^[a-zA-Z0-9]" ensures the email begins with a letter or number, not a special character.
 
